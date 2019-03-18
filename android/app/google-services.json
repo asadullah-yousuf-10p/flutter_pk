@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "627990748311",
+    "firebase_url": "https://women-tech-quest-app.firebaseio.com",
+    "project_id": "women-tech-quest-app",
+    "storage_bucket": "women-tech-quest-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:627990748311:android:62faada82820727c",
+        "android_client_info": {
+          "package_name": "com.tenpearls.wtq.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "627990748311-ami6lsv4n3iqdgcktr8ffis9tih0jvrp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJwtWFULJNQnV508P3SLBxzFb1hjGwIus"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
