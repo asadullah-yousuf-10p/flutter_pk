@@ -187,10 +187,12 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       GoogleSignInAccount googleUser = await googleSignIn.signIn();
       GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      FirebaseUser user = await auth.signInWithGoogle(
+      AuthCredential credential = GoogleAuthProvider.getCredential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
+
+      FirebaseUser user = await auth.signInWithCredential(credential);
 
       CollectionReference reference =
           Firestore.instance.collection(FireStoreKeys.userCollection);
