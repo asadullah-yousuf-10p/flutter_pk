@@ -60,8 +60,8 @@ class Session {
   Session.fromMap(Map<String, dynamic> map, {this.reference})
       : id = map['id'],
         title = map['title'],
-        endDateTime = ((map['endDateTime'] as Timestamp) != null) ? (map['endDateTime'] as Timestamp).toDate() : DateTime.now(),
-        startDateTime = ((map['startDateTime'] as Timestamp) != null) ? (map['startDateTime'] as Timestamp).toDate() : DateTime.now(),
+        endDateTime = (map['endDateTime'] is DateTime) ? map['endDateTime'] : (map['endDateTime'] as Timestamp).toDate(),
+        startDateTime = (map['startDateTime'] is DateTime) ? map['startDateTime'] : (map['startDateTime'] as Timestamp).toDate(),
         color = map['color'],
         textColor = map['textColor'],
         speakerId = map['speakerId'],

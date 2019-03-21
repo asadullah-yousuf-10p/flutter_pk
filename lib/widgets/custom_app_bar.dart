@@ -26,11 +26,12 @@ class CustomAppBarState extends State<CustomAppBar> {
         .first;
     eventDetails.then((onValue) {
       setState(() {
+        var date = onValue.documents.first['date'];
         eventDate = formatDate(
-          onValue.documents.first['date'],
+          (date is DateTime) ? date : (date as Timestamp).toDate(),
           DateFormats.shortUiDateFormat,
         );
-        eventDateTimeCache.setDateTime(onValue.documents.first['date']);
+        eventDateTimeCache.setDateTime((date is DateTime) ? date : (date as Timestamp).toDate());
         eventTitle = onValue.documents.first['eventTitle'];
       });
     });
