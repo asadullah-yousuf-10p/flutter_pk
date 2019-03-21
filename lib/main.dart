@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: _isLoading
                 ? Container()
                 : Image(
-                    image: AssetImage('assets/loader.png'),
+                    image: AssetImage('assets/wtq_splash.png'),
                   ),
           ),
           Column(
@@ -153,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Column(
             children: <Widget>[
               Text(
-                'Welcome to Flutter Pakistan',
+                'Welcome to Women Tech Quest',
                 style: Theme.of(context).textTheme.title,
               ),
               AnimatedCrossFade(
@@ -212,15 +212,15 @@ class _MyHomePageState extends State<MyHomePage> {
       prefs.setString(SharedPreferencesKeys.firebaseUserId, user.uid);
 
       await userCache.getCurrentUser(user.uid);
-
-      if (!userCache.user.isContributor) {
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => FullScreenContributionDialog(),
-            fullscreenDialog: true,
-          ),
-        );
-      }
+//
+//      if (!userCache.user.isContributor) {
+//        await Navigator.of(context).push(
+//          MaterialPageRoute(
+//            builder: (context) => FullScreenContributionDialog(),
+//            fullscreenDialog: true,
+//          ),
+//        );
+//      }
 
       Navigator.of(context).pushNamedAndRemoveUntil(
         Routes.home_master,
