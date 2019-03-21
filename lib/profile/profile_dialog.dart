@@ -157,29 +157,6 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
               ],
             ),
           ),
-          !_user.isContributor
-              ? ListTile(
-                  title: Center(child: Text('Want to contribute?')),
-                  onTap: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => FullScreenContributionDialog(),
-                        fullscreenDialog: true,
-                      ),
-                    );
-                    var user = await userCache.getCurrentUser(
-                      userCache.user.id,
-                      useCached: false,
-                    );
-                    Timer(Duration(seconds: 2), () {
-                      setState(() {
-                        _user = user;
-                      });
-                      _setUser();
-                    });
-                  },
-                )
-              : Container(),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0),
             child: SizedBox(

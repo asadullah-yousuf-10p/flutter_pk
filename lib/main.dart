@@ -212,15 +212,6 @@ class _MyHomePageState extends State<MyHomePage> {
       prefs.setString(SharedPreferencesKeys.firebaseUserId, user.uid);
 
       await userCache.getCurrentUser(user.uid);
-//
-//      if (!userCache.user.isContributor) {
-//        await Navigator.of(context).push(
-//          MaterialPageRoute(
-//            builder: (context) => FullScreenContributionDialog(),
-//            fullscreenDialog: true,
-//          ),
-//        );
-//      }
 
       Navigator.of(context).pushNamedAndRemoveUntil(
         Routes.home_master,
