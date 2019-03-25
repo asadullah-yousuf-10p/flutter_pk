@@ -17,7 +17,8 @@ abstract class ColorDictionary {
   };
 }
 
-const Color kBlue = Colors.blue;
+const Color kBlue = Color(0xFF54A8DB);
+const Color kPink = Color(0xFFD72E89);
 final theme = _buildTheme();
 
 ThemeData _buildTheme() {
@@ -26,7 +27,7 @@ ThemeData _buildTheme() {
 
   return base.copyWith(
     primaryColor: kBlue,
-    accentColor: kBlue,
+    accentColor: kPink,
     canvasColor: Colors.white,
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: AppBarTheme(
@@ -42,7 +43,8 @@ ThemeData _buildTheme() {
           .apply(bodyColor: Colors.black),
     ),
     buttonTheme: base.buttonTheme.copyWith(
-      buttonColor: kBlue,
+      buttonColor: kPink,
+      colorScheme: ColorScheme.dark(),
       textTheme: ButtonTextTheme.primary,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     ),
