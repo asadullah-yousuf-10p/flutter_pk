@@ -66,7 +66,7 @@ class _SprungBoxState extends State<SprungBox>
               height: 250.0,
               width: 250.0,
               child: Image(
-                image: AssetImage('assets/flutterKarachi.png'),
+                image: AssetImage('assets/wtq_splash.png'),
               ),
             ),
           ),

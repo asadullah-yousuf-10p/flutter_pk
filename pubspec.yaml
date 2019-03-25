@@ -16,8 +16,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_swiper: ^1.1.4
-  firebase_auth: ^0.6.6
-  cloud_firestore: ^0.8.2
+  firebase_auth: ^0.8.1+4
+  cloud_firestore: ^0.9.5+2
   sprung: ^1.1.0+11
   intl: '^0.15.4'
   rounded_modal: ^1.0.0
@@ -27,8 +27,8 @@ dependencies:
   rflutter_alert: ^1.0.2
   shared_preferences: ^0.4.3
   smooth_star_rating: 1.0.1
-  barcode_scan: ^0.0.7
-  google_maps_flutter: ^0.2.0+3
+  barcode_scan: ^1.0.0
+  google_maps_flutter: ^0.4.0
   url_launcher: ^5.0.1
 
   # The following adds the Cupertino Icons font to your application.

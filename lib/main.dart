@@ -109,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: _isLoading
                 ? Container()
                 : Image(
-                    image: AssetImage('assets/loader.png'),
+                    image: AssetImage('assets/wtq_splash.png'),
                   ),
           ),
           Column(
@@ -154,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Column(
             children: <Widget>[
               Text(
-                'Welcome to Flutter Pakistan',
+                'Welcome to Women Tech Quest',
                 style: Theme.of(context).textTheme.title,
               ),
               AnimatedCrossFade(
@@ -188,10 +188,12 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       GoogleSignInAccount googleUser = await googleSignIn.signIn();
       GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      FirebaseUser user = await auth.signInWithGoogle(
+      AuthCredential credential = GoogleAuthProvider.getCredential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
+
+      FirebaseUser user = await auth.signInWithCredential(credential);
 
       CollectionReference reference =
           Firestore.instance.collection(FireStoreKeys.userCollection);
@@ -213,15 +215,6 @@ class _MyHomePageState extends State<MyHomePage> {
       prefs.setString(SharedPreferencesKeys.firebaseUserId, user.uid);
 
       await userCache.getCurrentUser(user.uid);
-
-      if (!userCache.user.isContributor) {
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => FullScreenContributionDialog(),
-            fullscreenDialog: true,
-          ),
-        );
-      }
 
       Navigator.of(context).pushNamedAndRemoveUntil(
         Routes.home_master,
@@ -259,7 +252,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final waitFuture = Future.delayed(Duration(seconds: 5));
       final results = await Future.wait([sharedPrefsFuture, waitFuture]);
 
-      final SharedPreferences prefs = results[0];//await sharedPreferences;
+      final SharedPreferences prefs = results[0]; //await sharedPreferences;
       var userId = prefs.get(SharedPreferencesKeys.firebaseUserId);
       if (userId != null) {
         await userCache.getCurrentUser(userId);

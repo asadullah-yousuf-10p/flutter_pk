@@ -20,10 +20,10 @@ class CapsuleText extends StatelessWidget {
         ),
         child: Text(
           title,
-          style: Theme.of(context).textTheme.caption.copyWith(
-            color: textColor,
-            fontSize: 14.0
-          ),
+          style: Theme.of(context)
+              .textTheme
+              .caption
+              .copyWith(color: textColor, fontSize: 14.0),
         ),
       ),
     );

@@ -48,7 +48,8 @@ class SessionDetailPage extends StatelessWidget {
               context: context,
               type: AlertType.info,
               title: "Information!",
-              desc: "You will be able to provide feedback once the event day ends!",
+              desc:
+                  "You will be able to provide feedback once the event day ends!",
               buttons: [
                 DialogButton(
                   child: Text("Cool!",
