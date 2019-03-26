@@ -16,6 +16,8 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Women Tech Quest"
         android:icon="@mipmap/launcher_icon">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCJwtWFULJNQnV508P3SLBxzFb1hjGwIus"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

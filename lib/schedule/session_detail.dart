@@ -6,6 +6,7 @@ import 'package:flutter_pk/feedback/feedback.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/schedule/model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_pk/theme.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class SessionDetailPage extends StatelessWidget {
@@ -14,24 +15,17 @@ class SessionDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    var textColor = ColorDictionary.stringToColor[session.textColor];
+
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.dark,
+        iconTheme: IconThemeData(color: textColor),
         title: Text(
           session.title,
-          style: TextStyle(
-              color: ColorDictionary.stringToColor[session.textColor]),
+          style: TextStyle(color: textColor),
         ),
         backgroundColor: ColorDictionary.stringToColor[session.color],
-        leading: IconButton(
-            icon: Icon(
-              Icons.keyboard_arrow_left,
-              size: 40.0,
-            ),
-            color: ColorDictionary.stringToColor[session.textColor],
-            onPressed: () {
-              Navigator.of(context).pop();
-            }),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
@@ -47,7 +41,8 @@ class SessionDetailPage extends StatelessWidget {
               context: context,
               type: AlertType.info,
               title: "Information!",
-              desc: "You will be able to provide feedback once the event day ends!",
+              desc:
+                  "You will be able to provide feedback once the event day ends!",
               buttons: [
                 DialogButton(
                   child: Text("Cool!",

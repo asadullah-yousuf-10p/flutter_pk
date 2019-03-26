@@ -17,7 +17,8 @@ abstract class GlobalConstants {
   static const int emailMaxLength = 50;
   static const String breakId = 'break';
   static const int entryMaxLength = 50;
-  static const String qrKey = "thisisahighlyencryptedaubykhanstringthatisbeingusedforfluttermeetupqrscan";
+  static const String qrKey =
+      "thisisahighlyencryptedaubykhanstringthatisbeingusedforfluttermeetupqrscan";
   static const String addNumberDisplayText =
       'Add your phone number in order to receive event updates.';
   static const String editNumberDisplayText =
@@ -38,23 +39,6 @@ abstract class FireStoreKeys {
   static const String attendanceCollection = 'attendance';
   static const String attendeesCollection = 'attendees';
   static const String dateReferenceString = '16032019';
-}
-
-abstract class ColorDictionary {
-  static const Map<String, Color> stringToColor = {
-    'indigo': Colors.indigo,
-    'green': Colors.green,
-    'amber': Colors.amber,
-    'blue': Colors.blue,
-    'white': Colors.white,
-    'black': Colors.black,
-    'blueGrey': Colors.blueGrey,
-    'lightBlue': Colors.lightBlue,
-    'brown': Colors.brown,
-    'teal': Colors.teal,
-    'indigoAccent': Colors.indigoAccent,
-    'grey': Colors.grey
-  };
 }
 
 final GoogleSignIn googleSignIn = GoogleSignIn();

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_pk/util.dart';
 
 class Speaker {
   final String id;
@@ -22,11 +23,11 @@ class Speaker {
         photoUrl = map['photoUrl'];
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "description": description,
-    "photoUrl": photoUrl,
-  };
+        "id": id,
+        "name": name,
+        "description": description,
+        "photoUrl": photoUrl,
+      };
 
   Speaker.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
@@ -44,24 +45,23 @@ class Session {
   final List speakers;
   final DocumentReference reference;
 
-  Session({
-    this.id,
-    this.title,
-    this.endDateTime,
-    this.startDateTime,
-    this.color,
-    this.textColor,
-    this.description,
-    this.speakerId,
-    this.reference,
-    this.speakers
-  });
+  Session(
+      {this.id,
+      this.title,
+      this.endDateTime,
+      this.startDateTime,
+      this.color,
+      this.textColor,
+      this.description,
+      this.speakerId,
+      this.reference,
+      this.speakers});
 
   Session.fromMap(Map<String, dynamic> map, {this.reference})
       : id = map['id'],
         title = map['title'],
-        endDateTime = (map['endDateTime'] is DateTime) ? map['endDateTime'] : (map['endDateTime'] as Timestamp).toDate(),
-        startDateTime = (map['startDateTime'] is DateTime) ? map['startDateTime'] : (map['startDateTime'] as Timestamp).toDate(),
+        endDateTime = toDateTime(map['endDateTime']),
+        startDateTime = toDateTime(map['startDateTime']),
         color = map['color'],
         textColor = map['textColor'],
         speakerId = map['speakerId'],

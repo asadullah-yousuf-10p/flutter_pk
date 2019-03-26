@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/helpers/formatters.dart';
 import 'package:flutter_pk/profile/profile_dialog.dart';
+import 'package:flutter_pk/util.dart';
 
 class CustomAppBar extends StatefulWidget {
   final String title;
@@ -18,7 +19,6 @@ class CustomAppBarState extends State<CustomAppBar> {
   String eventTitle = '';
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     var eventDetails = Firestore.instance
         .collection(FireStoreKeys.dateCollection)
@@ -26,12 +26,12 @@ class CustomAppBarState extends State<CustomAppBar> {
         .first;
     eventDetails.then((onValue) {
       setState(() {
-        var date = onValue.documents.first['date'];
         eventDate = formatDate(
-          (date is DateTime) ? date : (date as Timestamp).toDate(),
+          toDateTime(onValue.documents.first['date']),
           DateFormats.shortUiDateFormat,
         );
-        eventDateTimeCache.setDateTime((date is DateTime) ? date : (date as Timestamp).toDate());
+        eventDateTimeCache
+            .setDateTime(toDateTime(onValue.documents.first['date']));
         eventTitle = onValue.documents.first['eventTitle'];
       });
     });
@@ -39,72 +39,41 @@ class CustomAppBarState extends State<CustomAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 32.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            GestureDetector(
-              onTap: () async {
-                await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => FullScreenProfileDialog(),
-                    fullscreenDialog: true,
-                  ),
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Container(
-                  height: 30.0,
-                  width: 30.0,
-                  decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: new DecorationImage(
-                      fit: BoxFit.fill,
-                      image: NetworkImage(userCache.user.photoUrl),
-                    ),
-                  ),
+      padding: const EdgeInsets.only(left: 8, top: 40, right: 8, bottom: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          GestureDetector(
+            onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => FullScreenProfileDialog(),
+                  fullscreenDialog: true,
                 ),
-              ),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: CircleAvatar(
+                  backgroundImage: NetworkImage(userCache.user.photoUrl)),
             ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    eventTitle,
-                    style: Theme.of(context)
-                        .textTheme
-                        .title
-                        .copyWith(fontSize: 20.0),
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.clip,
-                  ),
-                  Text(eventDate)
-                ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                eventTitle,
+                style: Theme.of(context).textTheme.title,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.clip,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Container(
-                height: 30.0,
-                width: 30.0,
-                decoration: new BoxDecoration(
-                    shape: BoxShape.circle, color: Colors.transparent),
-                child: Icon(
-                  Icons.location_on,
-                  color: Colors.white,
-                  size: 20.0,
-                ),
-              ),
-            ),
-          ],
-        ),
+              Text(eventDate)
+            ],
+          ),
+          SizedBox(width: 48),
+        ],
       ),
     );
   }

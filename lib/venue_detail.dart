@@ -19,7 +19,6 @@ class VenueDetailPageState extends State<VenueDetailPage> {
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
-    _addMarker(_venue);
   }
 
   @override
@@ -49,7 +48,7 @@ class VenueDetailPageState extends State<VenueDetailPage> {
                 width: 40.0,
                 child: Image(
                   image: AssetImage('assets/map.png'),
-                  color: Colors.blue,
+                  color: Theme.of(context).primaryColor,
                 ),
               )),
             )
@@ -68,6 +67,15 @@ class VenueDetailPageState extends State<VenueDetailPage> {
                         _venue.location.longitude,
                       ),
                       zoom: 15.0),
+                  markers: <Marker>{
+                    Marker(
+                        markerId: MarkerId(_venue.title),
+                        position: LatLng(_venue.location.latitude,
+                            _venue.location.longitude),
+                        infoWindow: InfoWindow(title: _venue.title),
+                        icon: BitmapDescriptor.defaultMarkerWithHue(
+                            BitmapDescriptor.hueAzure))
+                  },
                 ),
                 SafeArea(
                   child: Padding(
@@ -142,17 +150,5 @@ class VenueDetailPageState extends State<VenueDetailPage> {
         _isLoading = false;
       });
     });
-  }
-
-  void _addMarker(Venue venue) {
-    mapController.addMarker(
-      MarkerOptions(
-        position: LatLng(venue.location.latitude, venue.location.longitude),
-        infoWindowText: InfoWindowText(venue.title, venue.city),
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-          BitmapDescriptor.hueAzure,
-        ),
-      ),
-    );
   }
 }

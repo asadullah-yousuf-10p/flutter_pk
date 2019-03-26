@@ -1,4 +1,3 @@
-
 class LocationCache {
   String _longitude;
   String _latitude;
