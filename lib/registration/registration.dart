@@ -15,23 +15,34 @@ class RegistrationPage extends StatefulWidget {
 
 class RegistrationPageState extends State<RegistrationPage> {
   PageController controller = PageController();
+
   final GlobalKey<FormState> _mobileNumberFormKey = new GlobalKey<FormState>();
-  final GlobalKey<FormState> _studentProfessionalFormKey =
+  final GlobalKey<FormState> _reasonToAttendFormKey =
       new GlobalKey<FormState>();
-  final GlobalKey<FormState> _designationFormKey = new GlobalKey<FormState>();
+  final GlobalKey<FormState> _registrationFormKey = new GlobalKey<FormState>();
+
+  TextEditingController _mobileNumberController = TextEditingController();
+  TextEditingController _reasonToAttendController = TextEditingController();
+
   FocusNode focusNode = FocusNode();
-  TextEditingController mobileNumberController = TextEditingController();
-  TextEditingController designationController = TextEditingController();
-  TextEditingController studentProfessionalController = TextEditingController();
+  FocusNode _mobileFocusNode = FocusNode();
+
   int pageViewItemCount = 3;
+
   bool _isStudent = false;
   bool _isLoading = false;
+
+  int _competitionRadioValue = 0;
+  int _occupationRadioValue = 0;
+
+  var competitionNames = ['Coding', 'Design', 'Testing'];
+  var occupationNames = ['Professional', 'Student'];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    mobileNumberController.text = userCache.user.mobileNumber == null
+    _mobileNumberController.text = userCache.user.mobileNumber == null
         ? '+92'
         : userCache.user.mobileNumber;
   }
@@ -76,14 +87,13 @@ class RegistrationPageState extends State<RegistrationPage> {
                       userCache.user.mobileNumber == null
                           ? _buildNumberSetupView(
                               context,
-                              GlobalConstants.addNumberDisplayText,
+                              GlobalConstants.wtqImportantNotes,
                             )
                           : _buildNumberSetupView(
                               context,
                               GlobalConstants.editNumberDisplayText,
                             ),
                       _buildStudentProfessionalView(),
-                      _buildWorkInstituteEntryView(),
                       _buildDesignationEntryView()
                     ],
                     physics: NeverScrollableScrollPhysics(),
@@ -116,7 +126,7 @@ class RegistrationPageState extends State<RegistrationPage> {
               padding: const EdgeInsets.only(left: 128.0, right: 128.0),
               child: Center(
                 child: Image(
-                  image: AssetImage('assets/ic_phone_setup.png'),
+                  image: AssetImage('assets/wtq_splash.png'),
                   color: Theme.of(context).primaryColor,
                 ),
               ),
@@ -130,26 +140,13 @@ class RegistrationPageState extends State<RegistrationPage> {
               ),
               child: Text(
                 displayText,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: Theme.of(context).textTheme.subhead,
               ),
             ),
             Form(
               key: _mobileNumberFormKey,
-              child: ListTile(
-                title: TextFormField(
-                  focusNode: focusNode,
-                  controller: mobileNumberController,
-                  maxLength: GlobalConstants.phoneNumberMaxLength,
-                  validator: (value) => _validatePhoneNumber(value),
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      hintText: 'Enter mobile number',
-                      labelText: 'Mobile number'),
-                ),
-              ),
+              child: Text(''),
             ),
             Divider(),
             Row(
@@ -198,17 +195,17 @@ class RegistrationPageState extends State<RegistrationPage> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 Icon(
-                  Icons.work,
+                  Icons.person,
                   size: 60.0,
                   color: Theme.of(context).primaryColor,
                 ),
                 Icon(
-                  Icons.laptop_mac,
+                  Icons.important_devices,
                   size: 80.0,
                   color: Theme.of(context).primaryColor,
                 ),
                 Icon(
-                  Icons.school,
+                  Icons.content_paste,
                   size: 60.0,
                   color: Theme.of(context).primaryColor,
                 ),
@@ -221,48 +218,26 @@ class RegistrationPageState extends State<RegistrationPage> {
                 left: 32.0,
                 right: 32.0,
               ),
-              child: Text(
-                'Which one of the following best describes you?',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.title,
+              child: Form(
+                key: _registrationFormKey,
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      focusNode: _mobileFocusNode,
+                      controller: _mobileNumberController,
+                      maxLength: GlobalConstants.phoneNumberMaxLength,
+                      textInputAction: TextInputAction.done,
+                      validator: (value) => _validatePhoneNumber(value),
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          hintText: 'Enter mobile number',
+                          labelText: 'Mobile number'),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            ButtonBar(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                RaisedButton(
-                  child: Text('STUDENT'),
-                  onPressed: () {
-                    setState(() {
-                      _isStudent = true;
-                      pageViewItemCount = 3;
-                    });
-                    controller.animateToPage(2,
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.fastOutSlowIn);
-                  },
-                  textColor: Colors.white,
-                  color: Colors.blueGrey,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0)),
-                ),
-                RaisedButton(
-                  child: Text('PROFESSIONAL'),
-                  onPressed: () {
-                    setState(() {
-                      _isStudent = false;
-                      pageViewItemCount = 4;
-                    });
-                    controller.animateToPage(2,
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.fastOutSlowIn);
-                  },
-                  color: Colors.blueGrey,
-                  textColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0)),
-                ),
-              ],
             ),
             Divider(),
             Row(
@@ -286,89 +261,15 @@ class RegistrationPageState extends State<RegistrationPage> {
                           curve: Curves.fastOutSlowIn);
                     },
                   ),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Center _buildWorkInstituteEntryView() {
-    return Center(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(
-              _isStudent ? Icons.school : Icons.work,
-              size: 100.0,
-              color: Theme.of(context).primaryColor,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 16.0,
-                bottom: 16.0,
-                left: 32.0,
-                right: 32.0,
-              ),
-              child: Text(
-                'Where do you ${_isStudent ? 'study' : 'work'}?',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.title,
-              ),
-            ),
-            Form(
-              key: _studentProfessionalFormKey,
-              child: ListTile(
-                title: TextFormField(
-                  focusNode: focusNode,
-                  controller: studentProfessionalController,
-                  maxLength: GlobalConstants.entryMaxLength,
-                  validator: (value) =>
-                      _validateStudentProfessionalEntry(value),
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      hintText:
-                          'Enter ${_isStudent ? 'institute' : 'workplace'}',
-                      labelText: '${_isStudent ? 'Institute' : 'Workplace'}'),
-                ),
-              ),
-            ),
-            Divider(),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: FlatButton(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Icon(
-                          Icons.arrow_back,
-                          size: 24.0,
-                        ),
-                        Text('BACK'),
-                      ],
-                    ),
-                    textColor: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      controller.animateToPage(1,
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.fastOutSlowIn);
-                    },
-                  ),
                 ),
                 Expanded(
                   child: FlatButton(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Text(_isStudent ? 'DONE' : 'NEXT'),
+                        Text('NEXT'),
                         Icon(
-                          _isStudent ? Icons.check_circle : Icons.arrow_forward,
+                          Icons.arrow_forward,
                           size: 24.0,
                         ),
                       ],
@@ -376,12 +277,15 @@ class RegistrationPageState extends State<RegistrationPage> {
                     textColor: Theme.of(context).primaryColor,
                     onPressed: () async {
                       focusNode.unfocus();
-                      if (_studentProfessionalFormKey.currentState.validate()) {
+                      if (_registrationFormKey.currentState.validate()) {
                         if (_isStudent) {
                           await _submitDataToFirestore();
                           Alert(
                             context: context,
-                            type: AlertType.success,
+                            type: AlertType.info,
+                            style: new AlertStyle(
+                                isCloseButton: false,
+                                isOverlayTapDismiss: false),
                             title: "Success!",
                             desc:
                                 "Your are registered successfully!\nYou will receive a confirmation message soon!",
@@ -425,10 +329,104 @@ class RegistrationPageState extends State<RegistrationPage> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(
-              Icons.account_box,
-              size: 100.0,
-              color: Theme.of(context).primaryColor,
+            Padding(
+              padding: const EdgeInsets.only(left: 128.0, right: 128.0),
+              child: Center(
+                child: Image(
+                  image: AssetImage('assets/wtq_splash.png'),
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 16.0,
+                bottom: 16.0,
+                left: 32.0,
+                right: 32.0,
+              ),
+              child: new Text(
+                'In which competition you want to take part in?',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.title,
+              ),
+            ),
+            new Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new RadioListTile(
+                  value: 0,
+                  groupValue: _competitionRadioValue,
+                  onChanged: (int) => competition(int),
+                  title: new Text(
+                    competitionNames[0],
+                    style: new TextStyle(fontSize: 16.0),
+                  ),
+                ),
+                new RadioListTile(
+                  value: 1,
+                  groupValue: _competitionRadioValue,
+                  onChanged: (int) => competition(int),
+                  title: new Text(
+                    competitionNames[1],
+                    style: new TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+                new RadioListTile(
+                  value: 2,
+                  groupValue: _competitionRadioValue,
+                  onChanged: (int) => competition(int),
+                  title: new Text(
+                    competitionNames[2],
+                    style: new TextStyle(fontSize: 16.0),
+                  ),
+                ),
+              ],
+            ),
+            Divider(),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 16.0,
+                bottom: 16.0,
+                left: 32.0,
+                right: 32.0,
+              ),
+              child: new Text(
+                'What is your occupation?',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.title,
+              ),
+            ),
+            new Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new RadioListTile(
+                  value: 0,
+                  groupValue: _occupationRadioValue,
+                  onChanged: (int) => occupation(int),
+                  title: new Text(
+                    occupationNames[0],
+                    style: new TextStyle(fontSize: 16.0),
+                  ),
+                ),
+                new RadioListTile(
+                  value: 1,
+                  groupValue: _occupationRadioValue,
+                  onChanged: (int) => occupation(int),
+                  title: new Text(
+                    occupationNames[1],
+                    style: new TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Divider(),
+            SizedBox(
+              height: 20,
             ),
             Padding(
               padding: const EdgeInsets.only(
@@ -438,27 +436,30 @@ class RegistrationPageState extends State<RegistrationPage> {
                 right: 32.0,
               ),
               child: Text(
-                'Your designation at ${studentProfessionalController.text}',
+                'What objectives do you plan on achieving through participating in WomenTechQuest?',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.title,
               ),
             ),
             Form(
-              key: _designationFormKey,
+              key: _reasonToAttendFormKey,
               child: ListTile(
                 title: TextFormField(
                   focusNode: focusNode,
-                  controller: designationController,
+                  controller: _reasonToAttendController,
                   maxLength: GlobalConstants.entryMaxLength,
-                  validator: (value) => _validateDesignation(value),
+                  validator: (value) => _validateReasonToAttend(value),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0)),
-                    hintText: 'Enter designation',
-                    labelText: 'Designation',
+                    hintText: 'Your answer',
+                    labelText: 'Your answer',
                   ),
                 ),
               ),
+            ),
+            SizedBox(
+              height: 20,
             ),
             Divider(),
             Row(
@@ -498,12 +499,14 @@ class RegistrationPageState extends State<RegistrationPage> {
                     textColor: Theme.of(context).primaryColor,
                     onPressed: () async {
                       focusNode.unfocus();
-                      if (_designationFormKey.currentState.validate()) {
+                      if (_reasonToAttendFormKey.currentState.validate()) {
                         await _submitDataToFirestore();
                         Alert(
                           context: context,
                           type: AlertType.success,
                           title: "Success!",
+                          style: new AlertStyle(
+                              isCloseButton: false, isOverlayTapDismiss: false),
                           desc:
                               "Your are registered successfully!\nYou will receive a confirmation message soon!",
                           buttons: [
@@ -538,17 +541,11 @@ class RegistrationPageState extends State<RegistrationPage> {
     if (number.isEmpty) return 'Phone number required';
     if (number.length < GlobalConstants.phoneNumberMaxLength ||
         !RegexHelpers.phoneNumberRegex.hasMatch(number))
-      return 'You wouldn\'t want to miss any important update! \nPlease enter a valid mobile number';
+      return 'Please enter a valid mobile number';
   }
 
-  String _validateDesignation(String number) {
-    if (number.isEmpty) return 'Designation required';
-  }
-
-  String _validateStudentProfessionalEntry(String number) {
-    if (number.isEmpty)
-      return '${_isStudent ? 'Institute' : 'Workplace'} required';
-    return null;
+  String _validateReasonToAttend(String reason) {
+    if (reason.isEmpty) return 'Please write an answer';
   }
 
   Future _submitDataToFirestore() async {
@@ -557,11 +554,11 @@ class RegistrationPageState extends State<RegistrationPage> {
       Firestore.instance.runTransaction((transaction) async {
         await transaction.update(userCache.user.reference, {
           'registration': Registration(
-            occupation: _isStudent ? 'Student' : 'Professional',
-            workOrInstitute: studentProfessionalController.text,
-            designation: designationController.text,
-          ).toJson(),
-          'mobileNumber': mobileNumberController.text,
+                  occupation: occupationNames[_occupationRadioValue],
+                  competition: competitionNames[_competitionRadioValue],
+                  reasonToAttend: _reasonToAttendController.text)
+              .toJson(),
+          'mobileNumber': _mobileNumberController.text,
           'isRegistered': true
         });
       });
@@ -592,30 +589,38 @@ class RegistrationPageState extends State<RegistrationPage> {
       setState(() => _isLoading = false);
     }
   }
+
+  competition(int) {
+    setState(() {
+      _competitionRadioValue = int;
+    });
+  }
+
+  occupation(int) {
+    setState(() {
+      _occupationRadioValue = int;
+    });
+  }
 }
 
 class Registration {
+  final String competition;
   final String occupation;
-  final String workOrInstitute;
-  final String designation;
+  final String reasonToAttend;
   final DocumentReference reference;
 
-  Registration({
-    this.occupation,
-    this.designation = 'not applicable',
-    this.workOrInstitute,
-    this.reference,
-  });
+  Registration(
+      {this.competition, this.occupation, this.reasonToAttend, this.reference});
 
   Registration.fromMap(Map<String, dynamic> map, {this.reference})
       : occupation = map['occupation'],
-        designation = map['designation'],
-        workOrInstitute = map['workOrInstitute'];
+        competition = map['competition'],
+        reasonToAttend = map['reasonToAttend'];
 
   Map<String, dynamic> toJson() => {
         "occupation": this.occupation,
-        "workOrInstitute": this.workOrInstitute,
-        "designation": this.designation,
+        "competition": this.competition,
+        "reasonToAttend": this.reasonToAttend,
       };
 
   Registration.fromSnapshot(DocumentSnapshot snapshot)

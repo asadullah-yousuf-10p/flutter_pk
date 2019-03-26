@@ -13,6 +13,8 @@ abstract class Routes {
 
 abstract class GlobalConstants {
   static const int phoneNumberMaxLength = 13;
+  static const int userNameMaxLength = 25;
+  static const int emailMaxLength = 50;
   static const String breakId = 'break';
   static const int entryMaxLength = 50;
   static const String qrKey = "thisisahighlyencryptedaubykhanstringthatisbeingusedforfluttermeetupqrscan";
@@ -20,6 +22,8 @@ abstract class GlobalConstants {
       'Add your phone number in order to receive event updates.';
   static const String editNumberDisplayText =
       'Looks like you have a number registered against your account. You can use the same number to receive event confirmations or you can update it.';
+  static const String wtqImportantNotes = '10Pearls University presents Women Tech Quest 2019 on 20th April\'19! \n\n Details to Note: \n\n • This event is exclusively for women\n • Timings: 09:30 AM to 04:00 PM \n • Location: 10Pearls University premises (8th floor, Parsa Towers, Shahrah-e-Faisal, Karachi)\n \n Participation Notes:\n\n  • Languages for Coding Competition: C#, C++, Java8, Javascript (Node.js), Objective-C, PHP, Ruby, Python 3, Golang\n • Languages & Tools for Testing Competition: Java , C# , C++\n • Tools for Design Competition:\n • Participants are expected to bring their laptops and chargers for the competition\n • Experienced professionals are encouraged to participate\n • Shortlisted individuals will be sent a confirmation email\n • Registration Deadline: 6th April \'19, 5 PM\n \n For queries/suggestions:\n Please email at university@10pearls.com';
+
 }
 
 abstract class SharedPreferencesKeys {
