@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_pk/about_detail.dart';
 import 'package:flutter_pk/caches/user.dart';
 import 'package:flutter_pk/venue_detail.dart';
 import 'package:flutter_pk/global.dart';
@@ -32,7 +33,7 @@ class HomePageMasterState extends State<HomePageMaster> {
     Center(
       child: Text('Hello two'),
     ),
-    VenueDetailPage()
+    AboutDetailPage()
   ];
 
   @override
@@ -52,11 +53,13 @@ class HomePageMasterState extends State<HomePageMaster> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: _isLoading
             ? null
-            : FloatingActionButton.extended(
-                onPressed: _floatingButtonTapModerator,
-                icon: Icon(floatingButtonIcon),
-                label: Text(floatingButtonLabel),
-              ),
+            : _selectedIndex == 2
+                ? null
+                : FloatingActionButton.extended(
+                    onPressed: _floatingButtonTapModerator,
+                    icon: Icon(floatingButtonIcon),
+                    label: Text(floatingButtonLabel),
+                  ),
         body: Stack(
           children: <Widget>[
             widgets.elementAt(_selectedIndex),
@@ -92,7 +95,7 @@ class HomePageMasterState extends State<HomePageMaster> {
                       ),
                       title: Text(' ')),
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.location_on), title: Text('Venue')),
+                      icon: Icon(Icons.info_outline), title: Text('About')),
                 ],
               ),
       ),
@@ -101,7 +104,7 @@ class HomePageMasterState extends State<HomePageMaster> {
 
   void _floatingButtonTapModerator() {
     if (_selectedIndex == 2) {
-      _navigateToGoogleMaps();
+//      _navigateToAboutPage();
     } else if (_user.isRegistered) {
       if (!_isUserPresent) {
         if (DateTime.now().isBefore(eventDateTimeCache.eventDateTime)) {
@@ -151,35 +154,37 @@ class HomePageMasterState extends State<HomePageMaster> {
     }
   }
 
-  void _navigateToGoogleMaps() async {
-    bool isIOS = Theme.of(context).platform == TargetPlatform.iOS;
-    String googleUrl = '';
-    if (isIOS) {
-      googleUrl =
-          'comgooglemapsurl://maps.google.com/maps?f=d&daddr=${locationCache.latitude},${locationCache.longitude}&sspn=0.2,0.1';
-      String appleMapsUrl =
-          'https://maps.apple.com/?sll=${locationCache.latitude},${locationCache.longitude}';
-      if (await canLaunch("comgooglemaps://")) {
-        print('launching com googleUrl');
-        await launch(googleUrl);
-      } else if (await canLaunch(appleMapsUrl)) {
-        print('launching apple url');
-        await launch(appleMapsUrl);
-      } else {
-        await launch(
-            'https://www.google.com/maps/search/?api=1&query=${locationCache.latitude},${locationCache.longitude}');
-      }
-    } else {
-      googleUrl =
-          'google.navigation:q=${locationCache.latitude},${locationCache.longitude}&mode=d';
-      if (await canLaunch(googleUrl)) {
-        await launch(googleUrl);
-      } else {
-        await launch(
-            'https://www.google.com/maps/search/?api=1&query=${locationCache.latitude},${locationCache.longitude}');
-      }
-    }
-  }
+  void _navigateToAboutPage() {}
+
+//  void _navigateToGoogleMaps() async {
+//    bool isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+//    String googleUrl = '';
+//    if (isIOS) {
+//      googleUrl =
+//          'comgooglemapsurl://maps.google.com/maps?f=d&daddr=${locationCache.latitude},${locationCache.longitude}&sspn=0.2,0.1';
+//      String appleMapsUrl =
+//          'https://maps.apple.com/?sll=${locationCache.latitude},${locationCache.longitude}';
+//      if (await canLaunch("comgooglemaps://")) {
+//        print('launching com googleUrl');
+//        await launch(googleUrl);
+//      } else if (await canLaunch(appleMapsUrl)) {
+//        print('launching apple url');
+//        await launch(appleMapsUrl);
+//      } else {
+//        await launch(
+//            'https://www.google.com/maps/search/?api=1&query=${locationCache.latitude},${locationCache.longitude}');
+//      }
+//    } else {
+//      googleUrl =
+//          'google.navigation:q=${locationCache.latitude},${locationCache.longitude}&mode=d';
+//      if (await canLaunch(googleUrl)) {
+//        await launch(googleUrl);
+//      } else {
+//        await launch(
+//            'https://www.google.com/maps/search/?api=1&query=${locationCache.latitude},${locationCache.longitude}');
+//      }
+//    }
+//  }
 
   Future<String> _scanQr() async {
     try {

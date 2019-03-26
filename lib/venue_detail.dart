@@ -4,6 +4,7 @@ import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/venue_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:progress_indicators/progress_indicators.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class VenueDetailPage extends StatefulWidget {
   @override
@@ -32,6 +33,14 @@ class VenueDetailPageState extends State<VenueDetailPage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 20),child:FloatingActionButton.extended(
+          onPressed: () => _navigateToGoogleMaps(),
+          icon: Icon(Icons.my_location),
+          label: Text('Navigate'),)),
+      appBar: new AppBar(
+        title: Text('Venue'),
+      ),
       body: Column(
         children: <Widget>[_buildBody()],
       ),
@@ -150,5 +159,35 @@ class VenueDetailPageState extends State<VenueDetailPage> {
         _isLoading = false;
       });
     });
+  }
+
+  void _navigateToGoogleMaps() async {
+    bool isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+    String googleUrl = '';
+    if (isIOS) {
+      googleUrl =
+          'comgooglemapsurl://maps.google.com/maps?f=d&daddr=${locationCache.latitude},${locationCache.longitude}&sspn=0.2,0.1';
+      String appleMapsUrl =
+          'https://maps.apple.com/?sll=${locationCache.latitude},${locationCache.longitude}';
+      if (await canLaunch("comgooglemaps://")) {
+        print('launching com googleUrl');
+        await launch(googleUrl);
+      } else if (await canLaunch(appleMapsUrl)) {
+        print('launching apple url');
+        await launch(appleMapsUrl);
+      } else {
+        await launch(
+            'https://www.google.com/maps/search/?api=1&query=${locationCache.latitude},${locationCache.longitude}');
+      }
+    } else {
+      googleUrl =
+          'google.navigation:q=${locationCache.latitude},${locationCache.longitude}&mode=d';
+      if (await canLaunch(googleUrl)) {
+        await launch(googleUrl);
+      } else {
+        await launch(
+            'https://www.google.com/maps/search/?api=1&query=${locationCache.latitude},${locationCache.longitude}');
+      }
+    }
   }
 }

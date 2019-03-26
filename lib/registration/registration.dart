@@ -18,7 +18,7 @@ class RegistrationPageState extends State<RegistrationPage> {
 
   final GlobalKey<FormState> _mobileNumberFormKey = new GlobalKey<FormState>();
   final GlobalKey<FormState> _reasonToAttendFormKey =
-  new GlobalKey<FormState>();
+      new GlobalKey<FormState>();
   final GlobalKey<FormState> _registrationFormKey = new GlobalKey<FormState>();
 
   TextEditingController _mobileNumberController = TextEditingController();
@@ -67,10 +67,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                     ),
                     Text(
                       'Registration',
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .title,
+                      style: Theme.of(context).textTheme.title,
                     ),
                     SizedBox(width: 48),
                   ],
@@ -81,13 +78,13 @@ class RegistrationPageState extends State<RegistrationPage> {
                     children: <Widget>[
                       userCache.user.mobileNumber == null
                           ? _buildNumberSetupView(
-                        context,
-                        GlobalConstants.wtqImportantNotes,
-                      )
+                              context,
+                              GlobalConstants.wtqImportantNotes,
+                            )
                           : _buildNumberSetupView(
-                        context,
-                        GlobalConstants.editNumberDisplayText,
-                      ),
+                              context,
+                              GlobalConstants.editNumberDisplayText,
+                            ),
                       _buildStudentProfessionalView(),
                       _buildDesignationEntryView()
                     ],
@@ -98,9 +95,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                 DotsIndicator(
                   controller: controller,
                   itemCount: pageViewItemCount,
-                  activeColor: Theme
-                      .of(context)
-                      .primaryColor,
+                  activeColor: Theme.of(context).primaryColor,
                   inactiveColor: Colors.grey,
                 ),
               ],
@@ -124,9 +119,7 @@ class RegistrationPageState extends State<RegistrationPage> {
               child: Center(
                 child: Image(
                   image: AssetImage('assets/wtq_splash.png'),
-                  color: Theme
-                      .of(context)
-                      .primaryColor,
+                  color: Theme.of(context).primaryColor,
                   width: 120,
                 ),
               ),
@@ -141,10 +134,7 @@ class RegistrationPageState extends State<RegistrationPage> {
               child: Text(
                 displayText,
                 textAlign: TextAlign.start,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .subhead,
+                style: Theme.of(context).textTheme.subhead,
               ),
             ),
             Form(
@@ -166,9 +156,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                         )
                       ],
                     ),
-                    textColor: Theme
-                        .of(context)
-                        .primaryColor,
+                    textColor: Theme.of(context).primaryColor,
                     onPressed: () {
                       if (_mobileNumberFormKey.currentState.validate()) {
                         focusNode.unfocus();
@@ -191,148 +179,143 @@ class RegistrationPageState extends State<RegistrationPage> {
     return Center(
       child: SingleChildScrollView(
         child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-        Center(
-        child: IconTheme(
-            data: IconThemeData(color: Colors.blueGrey),
-        child: Row(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            Icon(
-              Icons.person,
-              size: 60.0,
-              color: Theme
-                  .of(context)
-                  .primaryColor,
+            Center(
+              child: IconTheme(
+                data: IconThemeData(color: Colors.blueGrey),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Icon(
+                      Icons.person,
+                      size: 60.0,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    Icon(
+                      Icons.important_devices,
+                      size: 80.0,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    Icon(
+                      Icons.content_paste,
+                      size: 60.0,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ],
+                ),
+              ),
             ),
-            Icon(
-              Icons.important_devices,
-              size: 80.0,
-              color: Theme
-                  .of(context)
-                  .primaryColor,
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 16.0,
+                bottom: 16.0,
+                left: 32.0,
+                right: 32.0,
+              ),
+              child: Form(
+                key: _registrationFormKey,
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      focusNode: _mobileFocusNode,
+                      controller: _mobileNumberController,
+                      maxLength: GlobalConstants.phoneNumberMaxLength,
+                      textInputAction: TextInputAction.done,
+                      validator: (value) => _validatePhoneNumber(value),
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          hintText: 'Enter mobile number',
+                          labelText: 'Mobile number'),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            Icon(
-              Icons.content_paste,
-              size: 60.0,
-              color: Theme
-                  .of(context)
-                  .primaryColor,
-            ),
+            Divider(),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: FlatButton(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(
+                          Icons.arrow_back,
+                          size: 24.0,
+                        ),
+                        Text('BACK'),
+                      ],
+                    ),
+                    textColor: Theme.of(context).primaryColor,
+                    onPressed: () {
+                      controller.animateToPage(0,
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.fastOutSlowIn);
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: FlatButton(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Text('NEXT'),
+                        Icon(
+                          Icons.arrow_forward,
+                          size: 24.0,
+                        ),
+                      ],
+                    ),
+                    textColor: Theme.of(context).primaryColor,
+                    onPressed: () async {
+                      focusNode.unfocus();
+                      if (_registrationFormKey.currentState.validate()) {
+                        if (_isStudent) {
+                          await _submitDataToFirestore();
+                          Alert(
+                            context: context,
+                            type: AlertType.info,
+                            style: new AlertStyle(
+                                isCloseButton: false,
+                                isOverlayTapDismiss: false),
+                            title: "Success!",
+                            desc:
+                                "Your are registered successfully!\nYou will receive a confirmation message soon!",
+                            buttons: [
+                              DialogButton(
+                                child: Text("COOL!",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .title
+                                        .copyWith(
+                                          color: Colors.white,
+                                        )),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                },
+                              )
+                            ],
+                          ).show();
+                        } else {
+                          controller.animateToPage(3,
+                              duration: Duration(milliseconds: 500),
+                              curve: Curves.fastOutSlowIn);
+                        }
+                      }
+                    },
+                  ),
+                )
+              ],
+            )
           ],
-        ),),),
-    Padding(
-    padding: const EdgeInsets.only(
-    top: 16.0,
-    bottom: 16.0,
-    left: 32.0,
-    right: 32.0,
-    ),
-    child: Form(
-    key: _registrationFormKey,
-    child: Column(
-    children: <Widget>[
-    TextFormField(
-    focusNode: _mobileFocusNode,
-    controller: _mobileNumberController,
-    maxLength: GlobalConstants.phoneNumberMaxLength,
-    textInputAction: TextInputAction.done,
-    validator: (value) => _validatePhoneNumber(value),
-    keyboardType: TextInputType.phone,
-    decoration: InputDecoration(
-    border: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(10.0)),
-    hintText: 'Enter mobile number',
-    labelText: 'Mobile number'),
-    ),
-    ],
-    ),
-    ),
-    ),
-    Divider(),
-    Row(
-    children: <Widget>[
-    Expanded(
-    child: FlatButton(
-    child: Row(
-    mainAxisAlignment: MainAxisAlignment.start,
-    children: <Widget>[
-    Icon(
-    Icons.arrow_back,
-    size: 24.0,
-    ),
-    Text('BACK'),
-    ],
-    ),
-    textColor: Theme.of(context).primaryColor,
-    onPressed: () {
-    controller.animateToPage(0,
-    duration: Duration(milliseconds: 500),
-    curve: Curves.fastOutSlowIn);
-    },
-    ),
-    ),
-    Expanded(
-    child: FlatButton(
-    child: Row(
-    mainAxisAlignment: MainAxisAlignment.end,
-    children: <Widget>[
-    Text('NEXT'),
-    Icon(
-    Icons.arrow_forward,
-    size: 24.0,
-    ),
-    ],
-    ),
-    textColor: Theme.of(context).primaryColor,
-    onPressed: () async {
-    focusNode.unfocus();
-    if (_registrationFormKey.currentState.validate()) {
-    if (_isStudent) {
-    await _submitDataToFirestore();
-    Alert(
-    context: context,
-    type: AlertType.info,
-    style: new AlertStyle(
-    isCloseButton: false,
-    isOverlayTapDismiss: false),
-    title: "Success!",
-    desc:
-    "Your are registered successfully!\nYou will receive a confirmation message soon!",
-    buttons: [
-    DialogButton(
-    child: Text("COOL!",
-    style: Theme.of(context)
-        .textTheme
-        .title
-        .copyWith(
-    color: Colors.white,
-    )),
-    onPressed: () {
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
-    },
-    )
-    ],
-    ).show();
-    } else {
-    controller.animateToPage(3,
-    duration: Duration(milliseconds: 500),
-    curve: Curves.fastOutSlowIn);
-    }
-    }
-    },
-    ),
-    )
-    ],
-    )
-    ],
-    ),
-    )
-    ,
+        ),
+      ),
     );
   }
 
@@ -348,9 +331,7 @@ class RegistrationPageState extends State<RegistrationPage> {
               child: Center(
                 child: Image(
                   image: AssetImage('assets/wtq_splash.png'),
-                  color: Theme
-                      .of(context)
-                      .primaryColor,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
             ),
@@ -364,10 +345,7 @@ class RegistrationPageState extends State<RegistrationPage> {
               child: new Text(
                 'In which competition you want to take part in?',
                 textAlign: TextAlign.center,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .title,
+                style: Theme.of(context).textTheme.title,
               ),
             ),
             new Column(
@@ -415,10 +393,7 @@ class RegistrationPageState extends State<RegistrationPage> {
               child: new Text(
                 'What is your occupation?',
                 textAlign: TextAlign.center,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .title,
+                style: Theme.of(context).textTheme.title,
               ),
             ),
             new Column(
@@ -460,10 +435,7 @@ class RegistrationPageState extends State<RegistrationPage> {
               child: Text(
                 'What objectives do you plan on achieving through participating in WomenTechQuest?',
                 textAlign: TextAlign.center,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .title,
+                style: Theme.of(context).textTheme.title,
               ),
             ),
             Form(
@@ -501,9 +473,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                         Text('BACK'),
                       ],
                     ),
-                    textColor: Theme
-                        .of(context)
-                        .primaryColor,
+                    textColor: Theme.of(context).primaryColor,
                     onPressed: () {
                       controller.animateToPage(1,
                           duration: Duration(milliseconds: 500),
@@ -523,9 +493,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                         ),
                       ],
                     ),
-                    textColor: Theme
-                        .of(context)
-                        .primaryColor,
+                    textColor: Theme.of(context).primaryColor,
                     onPressed: () async {
                       focusNode.unfocus();
                       if (_reasonToAttendFormKey.currentState.validate()) {
@@ -537,17 +505,16 @@ class RegistrationPageState extends State<RegistrationPage> {
                           style: new AlertStyle(
                               isCloseButton: false, isOverlayTapDismiss: false),
                           desc:
-                          "Your are registered successfully!\nYou will receive a confirmation message soon!",
+                              "Your are registered successfully!\nYou will receive a confirmation message soon!",
                           buttons: [
                             DialogButton(
                               child: Text("COOL!",
-                                  style: Theme
-                                      .of(context)
+                                  style: Theme.of(context)
                                       .textTheme
                                       .title
                                       .copyWith(
-                                    color: Colors.white,
-                                  )),
+                                        color: Colors.white,
+                                      )),
                               onPressed: () {
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
@@ -584,9 +551,9 @@ class RegistrationPageState extends State<RegistrationPage> {
       Firestore.instance.runTransaction((transaction) async {
         await transaction.update(userCache.user.reference, {
           'registration': Registration(
-              occupation: occupationNames[_occupationRadioValue],
-              competition: competitionNames[_competitionRadioValue],
-              reasonToAttend: _reasonToAttendController.text)
+                  occupation: occupationNames[_occupationRadioValue],
+                  competition: competitionNames[_competitionRadioValue],
+                  reasonToAttend: _reasonToAttendController.text)
               .toJson(),
           'mobileNumber': _mobileNumberController.text,
           'isRegistered': true
@@ -604,13 +571,9 @@ class RegistrationPageState extends State<RegistrationPage> {
         buttons: [
           DialogButton(
             child: Text("Dismiss",
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .title
-                    .copyWith(
-                  color: Colors.white,
-                )),
+                style: Theme.of(context).textTheme.title.copyWith(
+                      color: Colors.white,
+                    )),
             color: Colors.red,
             onPressed: () {
               Navigator.of(context).pop();
@@ -651,8 +614,7 @@ class Registration {
         competition = map['competition'],
         reasonToAttend = map['reasonToAttend'];
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "occupation": this.occupation,
         "competition": this.competition,
         "reasonToAttend": this.reasonToAttend,

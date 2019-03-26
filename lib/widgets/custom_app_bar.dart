@@ -4,10 +4,13 @@ import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/helpers/formatters.dart';
 import 'package:flutter_pk/profile/profile_dialog.dart';
 import 'package:flutter_pk/util.dart';
+import 'package:flutter_pk/venue_detail.dart';
 
 class CustomAppBar extends StatefulWidget {
   final String title;
+
   CustomAppBar({@required this.title});
+
   @override
   CustomAppBarState createState() {
     return new CustomAppBarState();
@@ -17,6 +20,7 @@ class CustomAppBar extends StatefulWidget {
 class CustomAppBarState extends State<CustomAppBar> {
   String eventDate = '';
   String eventTitle = '';
+
   @override
   void initState() {
     super.initState();
@@ -73,6 +77,16 @@ class CustomAppBarState extends State<CustomAppBar> {
             ],
           ),
           SizedBox(width: 48),
+          GestureDetector(
+              child: Icon(Icons.location_on),
+              onTap: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => VenueDetailPage(),
+
+                  ),
+                );
+              })
         ],
       ),
     );
