@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pk/caches/user.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/helpers/formatters.dart';
 import 'package:flutter_pk/schedule/model.dart';
@@ -34,7 +35,58 @@ class SchedulePageState extends State<SchedulePage>
 
   Widget _buildBody() {
     return Expanded(
-      child: _streamBuilder(FireStoreKeys.sessionCollection),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _streamBuilderForUser(),
+          Expanded(
+            child: _streamBuilder(FireStoreKeys.sessionCollection),
+          ),
+        ],
+      ),
+//      child:
+    );
+  }
+
+  Widget _RegistrationConfirmationBanner(DocumentSnapshot snapshot) {
+    User user = User.fromSnapshot(snapshot);
+
+    if (user == null || !user.isRegistered) {
+      return Container();
+    }
+
+    String message = (user.isRegistrationConfirmed)
+        ? "Your registration is confirmed."
+        : "Your registration is pending.";
+    Color bgColor = (user.isRegistrationConfirmed)
+        ? Color(0xFF00C851)
+        : Color(0xFFFF4444);
+    return Container(
+//      margin: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+          color: bgColor,),
+//          borderRadius: BorderRadius.all(Radius.circular(5.0))),
+      height: 30.0,
+      alignment: Alignment.center,
+      child: Text(
+        message,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.white,),
+      ),
+    );
+  }
+
+  StreamBuilder<QuerySnapshot> _streamBuilderForUser() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance
+          .collection(FireStoreKeys.userCollection).where("id", isEqualTo: userCache.user.id)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData)
+          return Container();
+        return _RegistrationConfirmationBanner(snapshot.data.documents?.first);
+      },
     );
   }
 
