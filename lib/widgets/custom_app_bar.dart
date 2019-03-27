@@ -43,50 +43,55 @@ class CustomAppBarState extends State<CustomAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    var userAvatar = GestureDetector(
+      onTap: () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => FullScreenProfileDialog(),
+            fullscreenDialog: true,
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: CircleAvatar(
+            backgroundImage: NetworkImage(userCache.user.photoUrl)),
+      ),
+    );
+
+    var title = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          eventTitle,
+          style: Theme.of(context).textTheme.title,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.clip,
+        ),
+        Text(eventDate)
+      ],
+    );
+
+    var locator = IconButton(
+      icon: const Icon(Icons.location_on),
+      onPressed: () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => VenueDetailPage(),
+          ),
+        );
+      },
+    );
+
     return Padding(
       padding: const EdgeInsets.only(left: 8, top: 40, right: 8, bottom: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          GestureDetector(
-            onTap: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => FullScreenProfileDialog(),
-                  fullscreenDialog: true,
-                ),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: CircleAvatar(
-                  backgroundImage: NetworkImage(userCache.user.photoUrl)),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                eventTitle,
-                style: Theme.of(context).textTheme.title,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.clip,
-              ),
-              Text(eventDate)
-            ],
-          ),
-          SizedBox(width: 48),
-          GestureDetector(
-              child: Icon(Icons.location_on),
-              onTap: () async {
-                await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => VenueDetailPage(),
-
-                  ),
-                );
-              })
+          userAvatar,
+          title,
+          locator,
         ],
       ),
     );
