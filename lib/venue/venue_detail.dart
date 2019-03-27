@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pk/global.dart';
-import 'package:flutter_pk/venue_model.dart';
+import 'package:flutter_pk/venue/model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,14 +24,12 @@ class VenueDetailPageState extends State<VenueDetailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _getData();
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 20),child:FloatingActionButton.extended(
@@ -39,7 +37,8 @@ class VenueDetailPageState extends State<VenueDetailPage> {
           icon: Icon(Icons.my_location),
           label: Text('Navigate'),)),
       appBar: new AppBar(
-        title: Text('Venue'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: Column(
         children: <Widget>[_buildBody()],

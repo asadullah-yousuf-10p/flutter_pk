@@ -4,7 +4,6 @@ import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/helpers/formatters.dart';
 import 'package:flutter_pk/profile/profile_dialog.dart';
 import 'package:flutter_pk/util.dart';
-import 'package:flutter_pk/venue_detail.dart';
 
 class CustomAppBar extends StatefulWidget {
   final String title;
@@ -73,16 +72,7 @@ class CustomAppBarState extends State<CustomAppBar> {
       ],
     );
 
-    var locator = IconButton(
-      icon: const Icon(Icons.location_on),
-      onPressed: () async {
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => VenueDetailPage(),
-          ),
-        );
-      },
-    );
+    var spacer = SizedBox(width: 48);
 
     return Padding(
       padding: const EdgeInsets.only(left: 8, top: 40, right: 8, bottom: 8),
@@ -91,7 +81,7 @@ class CustomAppBarState extends State<CustomAppBar> {
         children: <Widget>[
           userAvatar,
           title,
-          locator,
+          spacer,
         ],
       ),
     );

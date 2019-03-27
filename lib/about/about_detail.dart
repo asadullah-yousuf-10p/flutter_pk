@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pk/about/model.dart';
 import 'package:flutter_pk/global.dart';
-import 'package:flutter_pk/schedule/model.dart';
 import 'package:flutter_pk/widgets/custom_app_bar.dart';
 
 class AboutDetailPage extends StatefulWidget {
   @override
-  AboutDetailState createState() {
-    // TODO: implement createState
-    return new AboutDetailState();
-  }
+  AboutDetailState createState() => AboutDetailState();
 }
 
 class AboutDetailState extends State<AboutDetailPage> {
