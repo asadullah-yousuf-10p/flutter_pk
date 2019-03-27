@@ -26,6 +26,7 @@ class User {
   final bool isRegistered;
   final bool isContributor;
   final bool isPresent;
+  final bool isConfirmed;
   final DocumentReference reference;
 
   Contribution contribution;
@@ -39,6 +40,7 @@ class User {
     this.isRegistered = false,
     this.isContributor = false,
     this.isPresent = false,
+    this.isConfirmed = false,
     this.mobileNumber,
   });
 
@@ -50,7 +52,8 @@ class User {
         isRegistered = map['isRegistered'],
         isContributor = map['isContributor'],
         isPresent = map['isPresent'],
-        mobileNumber = map['mobileNumber'] {
+        mobileNumber = map['mobileNumber'],
+        isConfirmed = map['isConfirmed'] {
     if (isContributor) contribution = Contribution.fromMap(map['contribution']);
   }
 
@@ -62,7 +65,8 @@ class User {
         "isRegistered": isRegistered,
         "mobileNumber": mobileNumber,
         "isPresent": isPresent,
-        "isContributor": isContributor
+        "isContributor": isContributor,
+        "isConfirmed": isConfirmed
       };
 
   User.fromSnapshot(DocumentSnapshot snapshot)

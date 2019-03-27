@@ -34,7 +34,43 @@ class SchedulePageState extends State<SchedulePage>
 
   Widget _buildBody() {
     return Expanded(
-      child: _streamBuilder(FireStoreKeys.sessionCollection),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _RegistrationConfirmationBanner(),
+          Expanded(
+            child: _streamBuilder(FireStoreKeys.sessionCollection),
+          ),
+        ],
+      ),
+//      child:
+    );
+  }
+
+  Widget _RegistrationConfirmationBanner() {
+    if (userCache != null && !userCache.user.isRegistered) {
+      return Container();
+    }
+
+    String message = (userCache != null && userCache.user.isConfirmed)
+        ? "Your registration is confirmed."
+        : "Your registration is pending.";
+    Color bgColor = (userCache != null && userCache.user.isConfirmed)
+        ? Color(0xFF00C851)
+        : Color(0xFFFF4444);
+    return Container(
+      margin: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.all(Radius.circular(5.0))),
+      height: 30.0,
+      alignment: Alignment.center,
+      child: Text(
+        message,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,),
+      ),
     );
   }
 
