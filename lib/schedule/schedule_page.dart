@@ -53,10 +53,10 @@ class SchedulePageState extends State<SchedulePage>
       return Container();
     }
 
-    String message = (userCache != null && userCache.user.isConfirmed)
+    String message = (userCache != null && userCache.user.isRegistrationConfirmed)
         ? "Your registration is confirmed."
         : "Your registration is pending.";
-    Color bgColor = (userCache != null && userCache.user.isConfirmed)
+    Color bgColor = (userCache != null && userCache.user.isRegistrationConfirmed)
         ? Color(0xFF00C851)
         : Color(0xFFFF4444);
     return Container(

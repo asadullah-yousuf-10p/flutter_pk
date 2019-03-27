@@ -35,6 +35,7 @@ abstract class FireStoreKeys {
   static const String userCollection = 'users';
   static const String dateCollection = 'dates';
   static const String sessionCollection = 'sessions';
+  static const String sponsorsCollection = 'sponsors';
   static const String speakerCollection = 'speakers';
   static const String attendanceCollection = 'attendance';
   static const String attendeesCollection = 'attendees';

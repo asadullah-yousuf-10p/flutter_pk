@@ -4,10 +4,13 @@ import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/helpers/formatters.dart';
 import 'package:flutter_pk/profile/profile_dialog.dart';
 import 'package:flutter_pk/util.dart';
+import 'package:flutter_pk/venue_detail.dart';
 
 class CustomAppBar extends StatefulWidget {
   final String title;
+
   CustomAppBar({@required this.title});
+
   @override
   CustomAppBarState createState() {
     return new CustomAppBarState();
@@ -17,6 +20,7 @@ class CustomAppBar extends StatefulWidget {
 class CustomAppBarState extends State<CustomAppBar> {
   String eventDate = '';
   String eventTitle = '';
+
   @override
   void initState() {
     super.initState();
@@ -39,40 +43,55 @@ class CustomAppBarState extends State<CustomAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    var userAvatar = GestureDetector(
+      onTap: () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => FullScreenProfileDialog(),
+            fullscreenDialog: true,
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: CircleAvatar(
+            backgroundImage: NetworkImage(userCache.user.photoUrl)),
+      ),
+    );
+
+    var title = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          eventTitle,
+          style: Theme.of(context).textTheme.title,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.clip,
+        ),
+        Text(eventDate)
+      ],
+    );
+
+    var locator = IconButton(
+      icon: const Icon(Icons.location_on),
+      onPressed: () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => VenueDetailPage(),
+          ),
+        );
+      },
+    );
+
     return Padding(
       padding: const EdgeInsets.only(left: 8, top: 40, right: 8, bottom: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          GestureDetector(
-            onTap: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => FullScreenProfileDialog(),
-                  fullscreenDialog: true,
-                ),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: CircleAvatar(
-                  backgroundImage: NetworkImage(userCache.user.photoUrl)),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                eventTitle,
-                style: Theme.of(context).textTheme.title,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.clip,
-              ),
-              Text(eventDate)
-            ],
-          ),
-          SizedBox(width: 48),
+          userAvatar,
+          title,
+          locator,
         ],
       ),
     );
