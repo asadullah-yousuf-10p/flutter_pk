@@ -17,6 +17,10 @@ class SchedulePage extends StatefulWidget {
 
 class SchedulePageState extends State<SchedulePage>
     with SingleTickerProviderStateMixin {
+
+  final Color kUnConfirmedColor = Colors.grey[100];
+  final Color kConfirmedColor = Colors.green[100];
+  final Color kConfirmNotificationTextColor = Colors.black54;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +53,7 @@ class SchedulePageState extends State<SchedulePage>
     );
   }
 
-  Widget _RegistrationConfirmationBanner(DocumentSnapshot snapshot) {
+  Widget _registrationConfirmationBanner(DocumentSnapshot snapshot) {
     User user = User.fromSnapshot(snapshot);
 
     if (user == null || !user.isRegistered) {
@@ -60,19 +64,17 @@ class SchedulePageState extends State<SchedulePage>
         ? "Your registration is confirmed."
         : "Your registration is pending.";
     Color bgColor = (user.isRegistrationConfirmed)
-        ? Color(0xFF00C851)
-        : Color(0xFFFF4444);
+        ? kConfirmedColor
+        : kUnConfirmedColor;
     return Container(
-//      margin: EdgeInsets.all(10.0),
       decoration: BoxDecoration(
           color: bgColor,),
-//          borderRadius: BorderRadius.all(Radius.circular(5.0))),
       height: 30.0,
       alignment: Alignment.center,
       child: Text(
         message,
         textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.white,),
+        style: TextStyle(color: kConfirmNotificationTextColor,),
       ),
     );
   }
@@ -85,7 +87,7 @@ class SchedulePageState extends State<SchedulePage>
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Container();
-        return _RegistrationConfirmationBanner(snapshot.data.documents?.first);
+        return _registrationConfirmationBanner(snapshot.data.documents?.first);
       },
     );
   }
