@@ -3,22 +3,19 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_pk/about_detail.dart';
+import 'package:flutter_pk/about/about_detail.dart';
 import 'package:flutter_pk/caches/user.dart';
-import 'package:flutter_pk/venue_detail.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter_pk/registration/registration.dart';
+import 'package:flutter_pk/venue/venue_detail.dart';
 import 'package:flutter_pk/widgets/full_screen_loader.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_pk/schedule/schedule_page.dart';
 
 class HomePageMaster extends StatefulWidget {
   @override
-  HomePageMasterState createState() {
-    return new HomePageMasterState();
-  }
+  HomePageMasterState createState() => HomePageMasterState();
 }
 
 class HomePageMasterState extends State<HomePageMaster> {
@@ -38,14 +35,12 @@ class HomePageMasterState extends State<HomePageMaster> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _setUser(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark,
       sized: false,
@@ -53,13 +48,11 @@ class HomePageMasterState extends State<HomePageMaster> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: _isLoading
             ? null
-            : _selectedIndex == 2
-                ? null
-                : FloatingActionButton.extended(
-                    onPressed: _floatingButtonTapModerator,
-                    icon: Icon(floatingButtonIcon),
-                    label: Text(floatingButtonLabel),
-                  ),
+            : FloatingActionButton.extended(
+                onPressed: _floatingButtonTapModerator,
+                icon: Icon(floatingButtonIcon),
+                label: Text(floatingButtonLabel),
+              ),
         body: Stack(
           children: <Widget>[
             widgets.elementAt(_selectedIndex),
@@ -76,8 +69,8 @@ class HomePageMasterState extends State<HomePageMaster> {
                       ? Icons.center_focus_weak
                       : Icons.group_work;
                   if (value == 2) {
-                    floatingButtonLabel = 'Navigate';
-                    floatingButtonIcon = Icons.my_location;
+                    floatingButtonLabel = 'Venue';
+                    floatingButtonIcon = Icons.location_on;
                   }
                   if (value != 1)
                     setState(() {
@@ -104,7 +97,12 @@ class HomePageMasterState extends State<HomePageMaster> {
 
   void _floatingButtonTapModerator() {
     if (_selectedIndex == 2) {
-//      _navigateToAboutPage();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VenueDetailPage(),
+        ),
+      );
     } else if (_user.isRegistered) {
       if (!_isUserPresent) {
         if (DateTime.now().isBefore(eventDateTimeCache.eventDateTime)) {
@@ -153,38 +151,6 @@ class HomePageMasterState extends State<HomePageMaster> {
       _navigateToRegistration(context);
     }
   }
-
-  void _navigateToAboutPage() {}
-
-//  void _navigateToGoogleMaps() async {
-//    bool isIOS = Theme.of(context).platform == TargetPlatform.iOS;
-//    String googleUrl = '';
-//    if (isIOS) {
-//      googleUrl =
-//          'comgooglemapsurl://maps.google.com/maps?f=d&daddr=${locationCache.latitude},${locationCache.longitude}&sspn=0.2,0.1';
-//      String appleMapsUrl =
-//          'https://maps.apple.com/?sll=${locationCache.latitude},${locationCache.longitude}';
-//      if (await canLaunch("comgooglemaps://")) {
-//        print('launching com googleUrl');
-//        await launch(googleUrl);
-//      } else if (await canLaunch(appleMapsUrl)) {
-//        print('launching apple url');
-//        await launch(appleMapsUrl);
-//      } else {
-//        await launch(
-//            'https://www.google.com/maps/search/?api=1&query=${locationCache.latitude},${locationCache.longitude}');
-//      }
-//    } else {
-//      googleUrl =
-//          'google.navigation:q=${locationCache.latitude},${locationCache.longitude}&mode=d';
-//      if (await canLaunch(googleUrl)) {
-//        await launch(googleUrl);
-//      } else {
-//        await launch(
-//            'https://www.google.com/maps/search/?api=1&query=${locationCache.latitude},${locationCache.longitude}');
-//      }
-//    }
-//  }
 
   Future<String> _scanQr() async {
     try {
