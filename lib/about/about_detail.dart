@@ -15,6 +15,7 @@ class AboutDetailState extends State<AboutDetailPage> {
     return Scaffold(
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             CustomAppBar(
               title: 'About',
@@ -75,15 +76,7 @@ class AboutDetailState extends State<AboutDetailPage> {
               SizedBox(
                 height: 20,
               ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(Icons.star, size: 40, color: Colors.yellow[300]),
-                  Icon(Icons.star, size: 50, color: Colors.yellow[500]),
-                  Icon(Icons.star, size: 40, color: Colors.yellow[300]),
-                ],
-              ),
+              Text('Event Sponsors', style: Theme.of(context).textTheme.title,),
               GridView.count(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -103,20 +96,12 @@ class AboutDetailState extends State<AboutDetailPage> {
               SizedBox(
                 height: 20,
               ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(Icons.star, size: 30, color: Colors.grey[300]),
-                  Icon(Icons.star, size: 40, color: Colors.grey[500]),
-                  Icon(Icons.star, size: 30, color: Colors.grey[300]),
-                ],
-              ),
+              Text('Competetition Sponsors', style: Theme.of(context).textTheme.title,),
               GridView.count(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  crossAxisCount: 2,
-                  childAspectRatio: 2.0,
+                  crossAxisCount: 3,
+                  childAspectRatio: 1.5,
                   children: silverSponsors.map(
                     (String url) {
                       return sponsorWidget(url);
@@ -131,15 +116,7 @@ class AboutDetailState extends State<AboutDetailPage> {
               SizedBox(
                 height: 20,
               ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(Icons.star, size: 20, color: Colors.brown[200]),
-                  Icon(Icons.star, size: 30, color: Colors.brown[300]),
-                  Icon(Icons.star, size: 20, color: Colors.brown[200]),
-                ],
-              ),
+              Text('Partners', style: Theme.of(context).textTheme.title,),
               GridView.count(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -155,7 +132,7 @@ class AboutDetailState extends State<AboutDetailPage> {
         }
         if (index == 3) {
           return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Divider(
@@ -165,7 +142,7 @@ class AboutDetailState extends State<AboutDetailPage> {
                 height: 20,
               ),
               Text(
-                'Guide',
+                'About Women Tech Quest',
                 style: Theme.of(context).textTheme.headline,
               ),
               SizedBox(
@@ -174,7 +151,92 @@ class AboutDetailState extends State<AboutDetailPage> {
               Padding(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
                 child: Text(
-                  GlobalConstants.wtqImportantNotes,
+                  GlobalConstants.aboutWtqDetails,
+                  style: Theme.of(context).textTheme.subtitle,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Coding Competition',
+                style: Theme.of(context).textTheme.headline,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                child: Text(
+                  GlobalConstants.codingCompetitionDetails,
+                  style: Theme.of(context).textTheme.subtitle,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Testing Competition',
+                style: Theme.of(context).textTheme.headline,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                child: Text(
+                  GlobalConstants.testingCompetitionDetails,
+                  style: Theme.of(context).textTheme.subtitle,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Design Competition',
+                style: Theme.of(context).textTheme.headline,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                child: Text(
+                  GlobalConstants.designCompetitionDetails,
+                  style: Theme.of(context).textTheme.subtitle,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'What\'s in it for you?',
+                style: Theme.of(context).textTheme.headline,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                child: Text(
+                  GlobalConstants.prizeDetails,
+                  style: Theme.of(context).textTheme.subtitle,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Guidelines',
+                style: Theme.of(context).textTheme.headline,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                child: Text(
+                  GlobalConstants.guidelinesDetails,
                   style: Theme.of(context).textTheme.subtitle,
                 ),
               ),
@@ -221,7 +283,7 @@ class AboutDetailState extends State<AboutDetailPage> {
     return Container(
       padding: EdgeInsets.all(10),
       child: new Card(
-        elevation: 5,
+        elevation: 1,
         child: Padding(
           padding: EdgeInsets.all(5),
           child: Image.network(url),

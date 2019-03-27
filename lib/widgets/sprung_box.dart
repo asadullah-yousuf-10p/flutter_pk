@@ -49,27 +49,45 @@ class _SprungBoxState extends State<SprungBox>
         final height = constraints.maxWidth * 2;
         final left = !this._isOffset ? height + 100.0 : 40.0;
 
-        final width = MediaQuery.of(context).size.width * 2;
+        final width = MediaQuery.of(context).size.width * 4;
 
         return Padding(
-          padding: const EdgeInsets.only(right: 48.0),
+          padding: const EdgeInsets.only(right: 4.0),
           child: AnimatedContainer(
             duration: this.widget.duration,
             curve: Sprung(damped: this.widget.damped),
             margin: EdgeInsets.only(
               left: left,
             ),
-            height: 250.0,
+            height: 320.0,
             width: width,
             color: Colors.transparent,
-            child: SizedBox(
+            child: /*SizedBox(
               height: 250.0,
               width: 250.0,
-              child: Image(
+              child:*//* Image(
                 image: AssetImage('assets/wtq_splash.png'),
+              ),*/
+              Column(
+                children: <Widget>[
+                  Container(
+                    height: 200,
+                    child: Image(
+                      image: AssetImage('assets/wtq_splash.png'),
+                    ),
+                  ),
+                  Text('Powered By:',style: Theme.of(context).textTheme.subtitle,),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    height: 60,
+                    child: Image(
+                      image: AssetImage('assets/10p_uni_logo.png'),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
+         /* ),*/
         );
       },
     );
