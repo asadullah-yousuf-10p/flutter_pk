@@ -7,10 +7,12 @@ class SprungBox extends StatefulWidget {
   final Damped damped;
   final Duration duration;
   final BoolCallback callback;
+  final String sponsorImageUrl;
 
   SprungBox({
-    this.damped = Damped.critically,
+    this.damped = Damped.over,
     this.callback,
+    this.sponsorImageUrl,
     duration,
   }) : this.duration = duration ?? Duration(milliseconds: 3500);
 
@@ -49,45 +51,71 @@ class _SprungBoxState extends State<SprungBox>
         final height = constraints.maxWidth * 2;
         final left = !this._isOffset ? height + 100.0 : 40.0;
 
-        final width = MediaQuery.of(context).size.width * 4;
+        final width = MediaQuery.of(context).size.width * 2;
 
         return Padding(
-          padding: const EdgeInsets.only(right: 4.0),
+          padding: const EdgeInsets.only(right: 48.0),
           child: AnimatedContainer(
             duration: this.widget.duration,
             curve: Sprung(damped: this.widget.damped),
             margin: EdgeInsets.only(
               left: left,
             ),
-            height: 320.0,
+            height: 520.0,
             width: width,
             color: Colors.transparent,
-            child: /*SizedBox(
-              height: 250.0,
-              width: 250.0,
-              child:*//* Image(
-                image: AssetImage('assets/wtq_splash.png'),
-              ),*/
-              Column(
-                children: <Widget>[
-                  Container(
-                    height: 200,
-                    child: Image(
-                      image: AssetImage('assets/wtq_splash.png'),
-                    ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 50),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        height: 30,
+                        child: Image(
+                          image: AssetImage('assets/10p_uni_logo.png'),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Container(
+                        height: 16,
+                        width: 2,
+                        color: Theme.of(context).dividerColor,
+                      ),
+                      SizedBox(width: 8),
+                      Container(
+                        height: 30,
+                        child: Image(
+                          image: AssetImage('assets/flutterKarachi.png'),
+                        ),
+                      ),
+                    ],
                   ),
-                  Text('Powered By:',style: Theme.of(context).textTheme.subtitle,),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    height: 60,
-                    child: Image(
-                      image: AssetImage('assets/10p_uni_logo.png'),
-                    ),
+                ),
+                Container(
+                  height: 200,
+                  child: Image(
+                    image: AssetImage('assets/wtq_splash.png'),
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Powered By:',
+                  style: Theme.of(context).textTheme.subtitle,
+                ),
+                SizedBox(height: 8),
+                Container(
+                  height: 80,
+                  child: widget.sponsorImageUrl != null
+                      ? Image.network(widget.sponsorImageUrl)
+                      : null,
+                ),
+              ],
             ),
-         /* ),*/
+          ),
+          /* ),*/
         );
       },
     );

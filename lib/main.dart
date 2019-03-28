@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_pk/about/model.dart';
 import 'package:flutter_pk/caches/user.dart';
 import 'package:flutter_pk/contribution/contribution_dialog.dart';
 import 'package:flutter_pk/global.dart';
@@ -48,17 +49,76 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _isLoading = false;
   bool _showSwipeText = false;
   bool _isFetchingSharedPreferences = false;
+  String sponsorImageUrl = '';
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     Firestore.instance.settings(
       timestampsInSnapshotsEnabled: true,
     );
 
-    _getSharedPreferences();
+    _loadData();
+  }
+
+  void _loadData() async {
+    setState(() => _isFetchingSharedPreferences = true);
+    try {
+      final sharedPrefsFuture = sharedPreferences;
+      final sponsoredImageFuture = _getSponsorImageUrl();
+      final waitFuture = Future.delayed(Duration(seconds: 5));
+      final results = await Future.wait(
+          [sharedPrefsFuture, sponsoredImageFuture, waitFuture]);
+      await _loadUserFromPrefs(results);
+      setState(() => sponsorImageUrl = results[1]);
+    } catch (ex) {
+      print(ex);
+      Alert(
+        context: context,
+        type: AlertType.error,
+        title: "Oops!",
+        desc: "An error has occurred",
+        buttons: [
+          DialogButton(
+            child: Text("Dismiss",
+                style: Theme.of(context).textTheme.title.copyWith(
+                      color: Colors.white,
+                    )),
+            color: Colors.red,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      ).show();
+    } finally {
+      setState(() {
+        _isFetchingSharedPreferences = false;
+        _showSwipeText = true;
+      });
+    }
+  }
+
+  Future _loadUserFromPrefs(List results) async {
+    final SharedPreferences prefs = results[0];
+    var userId = prefs.get(SharedPreferencesKeys.firebaseUserId);
+    if (userId != null) {
+      await userCache.getCurrentUser(userId);
+      await Navigator.of(context).pushNamedAndRemoveUntil(
+        Routes.home_master,
+        ModalRoute.withName(Routes.main),
+      );
+    }
+  }
+
+  Future<String> _getSponsorImageUrl() async {
+    var document = await Firestore.instance
+        .collection(FireStoreKeys.sponsorsCollection)
+        .where("type", isEqualTo: 0)
+        .getDocuments();
+    Sponsor data = Sponsor.fromMap(document.documents.first.data);
+    return data.imageUrl;
   }
 
   @override
@@ -145,10 +205,11 @@ class _MyHomePageState extends State<MyHomePage> {
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           SprungBox(
             damped: Damped.critically,
+            sponsorImageUrl: sponsorImageUrl,
             callback: (bool value) {},
           ),
           Column(
@@ -163,7 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     : CrossFadeState.showSecond,
                 duration: Duration(milliseconds: 800),
                 firstChild: Padding(
-                  padding: const EdgeInsets.only(top: 32.0),
+                  padding: const EdgeInsets.only(top: 20.0),
                   child: Text('Swipe left to proceed'),
                 ),
                 secondChild: Padding(
@@ -242,50 +303,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ).show();
     } finally {
       setState(() => _isLoading = false);
-    }
-  }
-
-  void _getSharedPreferences() async {
-    setState(() => _isFetchingSharedPreferences = true);
-    try {
-      final sharedPrefsFuture = sharedPreferences;
-      final waitFuture = Future.delayed(Duration(seconds: 5));
-      final results = await Future.wait([sharedPrefsFuture, waitFuture]);
-
-      final SharedPreferences prefs = results[0]; //await sharedPreferences;
-      var userId = prefs.get(SharedPreferencesKeys.firebaseUserId);
-      if (userId != null) {
-        await userCache.getCurrentUser(userId);
-        await Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.home_master,
-          ModalRoute.withName(Routes.main),
-        );
-      }
-    } catch (ex) {
-      print(ex);
-      Alert(
-        context: context,
-        type: AlertType.error,
-        title: "Oops!",
-        desc: "An error has occurred",
-        buttons: [
-          DialogButton(
-            child: Text("Dismiss",
-                style: Theme.of(context).textTheme.title.copyWith(
-                      color: Colors.white,
-                    )),
-            color: Colors.red,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      ).show();
-    } finally {
-      setState(() {
-        _isFetchingSharedPreferences = false;
-        _showSwipeText = true;
-      });
     }
   }
 }
