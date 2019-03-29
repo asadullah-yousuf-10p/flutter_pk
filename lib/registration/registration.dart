@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/helpers/regex-helpers.dart';
+import 'package:flutter_pk/widgets/about.dart';
 import 'package:flutter_pk/widgets/dots_indicator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_pk/widgets/full_screen_loader.dart';
@@ -40,7 +41,6 @@ class RegistrationPageState extends State<RegistrationPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _mobileNumberController.text = userCache.user.mobileNumber == null
         ? '+92'
@@ -49,7 +49,6 @@ class RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Stack(
       children: <Widget>[
         Scaffold(
@@ -76,17 +75,9 @@ class RegistrationPageState extends State<RegistrationPage> {
                   child: PageView(
                     controller: controller,
                     children: <Widget>[
-                      userCache.user.mobileNumber == null
-                          ? _buildNumberSetupView(
-                              context,
-                              GlobalConstants.wtqImportantNotes,
-                            )
-                          : _buildNumberSetupView(
-                              context,
-                              GlobalConstants.editNumberDisplayText,
-                            ),
-                      _buildStudentProfessionalView(),
-                      _buildDesignationEntryView()
+                      _buildAboutPage(),
+                      _buildPhoneInput(),
+                      _buildInfoForm()
                     ],
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.horizontal,
@@ -107,75 +98,33 @@ class RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  Widget _buildNumberSetupView(BuildContext context, String displayText) {
+  Widget _buildAboutPage() {
     return Center(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 128.0, right: 128.0),
-              child: Center(
-                child: Image(
-                  image: AssetImage('assets/wtq_splash.png'),
-                  color: Theme.of(context).primaryColor,
-                  width: 120,
+            AboutEvent(),
+            Align(
+              alignment: Alignment.centerRight,
+              child: FlatButton.icon(
+                icon: Icon(
+                  Icons.arrow_forward,
+                  size: 24.0,
                 ),
+                label: Text('NEXT'),
+                textColor: Theme.of(context).primaryColor,
+                onPressed: () => controller.animateToPage(1,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.fastOutSlowIn),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 16.0,
-                bottom: 16.0,
-                left: 32.0,
-                right: 32.0,
-              ),
-              child: Text(
-                displayText,
-                textAlign: TextAlign.start,
-                style: Theme.of(context).textTheme.subhead,
-              ),
-            ),
-            Form(
-              key: _mobileNumberFormKey,
-              child: Text(''),
-            ),
-            Divider(),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: FlatButton(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Text('NEXT'),
-                        Icon(
-                          Icons.arrow_forward,
-                          size: 24.0,
-                        )
-                      ],
-                    ),
-                    textColor: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      if (_mobileNumberFormKey.currentState.validate()) {
-                        focusNode.unfocus();
-                        controller.animateToPage(1,
-                            duration: Duration(milliseconds: 500),
-                            curve: Curves.fastOutSlowIn);
-                      }
-                    },
-                  ),
-                )
-              ],
-            )
           ],
-        ),
+        ), //_buildKachra(context, displayText),
       ),
     );
   }
 
-  Center _buildStudentProfessionalView() {
+  Center _buildPhoneInput() {
     return Center(
       child: SingleChildScrollView(
         child: Column(
@@ -319,7 +268,7 @@ class RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  Center _buildDesignationEntryView() {
+  Center _buildInfoForm() {
     return Center(
       child: SingleChildScrollView(
         child: Column(
