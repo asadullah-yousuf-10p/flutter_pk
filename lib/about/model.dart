@@ -16,9 +16,9 @@ class Sponsor {
         imageUrl = map['imageUrl'];
 
   Map<String, dynamic> toJson() => {
-    "type": type,
-    "imageUrl": imageUrl,
-  };
+        "type": type,
+        "imageUrl": imageUrl,
+      };
 
   Sponsor.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);

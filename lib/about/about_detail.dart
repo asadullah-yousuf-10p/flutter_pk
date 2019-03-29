@@ -76,7 +76,10 @@ class AboutDetailState extends State<AboutDetailPage> {
               SizedBox(
                 height: 20,
               ),
-              Text('Event Sponsors', style: Theme.of(context).textTheme.title,),
+              Text(
+                'Event Sponsors',
+                style: Theme.of(context).textTheme.title,
+              ),
               GridView.count(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -96,7 +99,10 @@ class AboutDetailState extends State<AboutDetailPage> {
               SizedBox(
                 height: 20,
               ),
-              Text('Competetition Sponsors', style: Theme.of(context).textTheme.title,),
+              Text(
+                'Competetition Sponsors',
+                style: Theme.of(context).textTheme.title,
+              ),
               GridView.count(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -116,7 +122,10 @@ class AboutDetailState extends State<AboutDetailPage> {
               SizedBox(
                 height: 20,
               ),
-              Text('Partners', style: Theme.of(context).textTheme.title,),
+              Text(
+                'Partners',
+                style: Theme.of(context).textTheme.title,
+              ),
               GridView.count(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,

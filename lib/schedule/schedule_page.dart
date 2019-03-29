@@ -17,7 +17,6 @@ class SchedulePage extends StatefulWidget {
 
 class SchedulePageState extends State<SchedulePage>
     with SingleTickerProviderStateMixin {
-
   final Color kUnConfirmedColor = Colors.grey[100];
   final Color kConfirmedColor = Colors.green[100];
   final Color kConfirmNotificationTextColor = Colors.black54;
@@ -63,18 +62,20 @@ class SchedulePageState extends State<SchedulePage>
     String message = (user.isRegistrationConfirmed)
         ? "Your registration is confirmed."
         : "Your registration is pending.";
-    Color bgColor = (user.isRegistrationConfirmed)
-        ? kConfirmedColor
-        : kUnConfirmedColor;
+    Color bgColor =
+        (user.isRegistrationConfirmed) ? kConfirmedColor : kUnConfirmedColor;
     return Container(
       decoration: BoxDecoration(
-          color: bgColor,),
+        color: bgColor,
+      ),
       height: 30.0,
       alignment: Alignment.center,
       child: Text(
         message,
         textAlign: TextAlign.center,
-        style: TextStyle(color: kConfirmNotificationTextColor,),
+        style: TextStyle(
+          color: kConfirmNotificationTextColor,
+        ),
       ),
     );
   }
@@ -82,11 +83,11 @@ class SchedulePageState extends State<SchedulePage>
   StreamBuilder<QuerySnapshot> _streamBuilderForUser() {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
-          .collection(FireStoreKeys.userCollection).where("id", isEqualTo: userCache.user.id)
+          .collection(FireStoreKeys.userCollection)
+          .where("id", isEqualTo: userCache.user.id)
           .snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData)
-          return Container();
+        if (!snapshot.hasData) return Container();
         return _registrationConfirmationBanner(snapshot.data.documents?.first);
       },
     );
