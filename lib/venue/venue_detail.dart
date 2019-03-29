@@ -32,10 +32,13 @@ class VenueDetailPageState extends State<VenueDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 20),child:FloatingActionButton.extended(
-          onPressed: () => _navigateToGoogleMaps(),
-          icon: Icon(Icons.my_location),
-          label: Text('Navigate'),)),
+      floatingActionButton: Padding(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+          child: FloatingActionButton.extended(
+            onPressed: () => _navigateToGoogleMaps(),
+            icon: Icon(Icons.my_location),
+            label: Text('Navigate'),
+          )),
       appBar: new AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
