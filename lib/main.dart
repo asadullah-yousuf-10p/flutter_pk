@@ -134,6 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   SafeArea _buildBody(BuildContext context) {
+    var paginationMargin = new EdgeInsets.only(bottom: 24);
     return SafeArea(
       child: new Swiper.children(
         autoplay: false,
@@ -142,9 +143,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ? NeverScrollableScrollPhysics()
             : ScrollPhysics(),
         pagination: _isFetchingSharedPreferences
-            ? SwiperPagination()
+            ? SwiperPagination(
+                margin: paginationMargin,
+              )
             : new SwiperPagination(
-                margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 30.0),
+                margin: paginationMargin,
                 builder: new DotSwiperPaginationBuilder(
                     color: Theme.of(context).hintColor,
                     activeColor: Theme.of(context).primaryColor,
@@ -223,21 +226,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     ? CrossFadeState.showFirst
                     : CrossFadeState.showSecond,
                 duration: Duration(milliseconds: 800),
-                firstChild: Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: Text('Swipe left to proceed'),
-                ),
-                secondChild: Padding(
-                  padding: const EdgeInsets.only(top: 32.0),
-                  child: Text(
-                    'Please wait ...',
-                  ),
-                ),
+                firstChild: _buildHelpText('Swipe left to proceed'),
+                secondChild: _buildHelpText('Please wait ...'),
               ),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  Padding _buildHelpText(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8, bottom: 32),
+      child: Text(text),
     );
   }
 
