@@ -61,14 +61,14 @@ class _SprungBoxState extends State<SprungBox>
             margin: EdgeInsets.only(
               left: left,
             ),
-            height: 520.0,
+            height: 400.0,
             width: width,
             color: Colors.transparent,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: 50),
+                  padding: EdgeInsets.only(top: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -95,7 +95,7 @@ class _SprungBoxState extends State<SprungBox>
                   ),
                 ),
                 Container(
-                  height: 200,
+                  height: 180,
                   child: Image(
                     image: AssetImage('assets/wtq_splash.png'),
                   ),
@@ -107,7 +107,7 @@ class _SprungBoxState extends State<SprungBox>
                 ),
                 SizedBox(height: 8),
                 Container(
-                  height: 80,
+                  height: 60,
                   child: widget.sponsorImageUrl != null
                       ? Image.network(widget.sponsorImageUrl)
                       : null,

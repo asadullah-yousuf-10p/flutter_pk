@@ -205,7 +205,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SprungBox(
             damped: Damped.critically,
