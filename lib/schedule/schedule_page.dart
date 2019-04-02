@@ -102,7 +102,7 @@ class SchedulePageState extends State<SchedulePage>
         if (!snapshot.hasData)
           return Center(
             child: Text(
-              'Nothing found',
+              'Nothing found!',
               style: Theme.of(context).textTheme.title.copyWith(
                     color: Colors.black26,
                     fontWeight: FontWeight.bold,
