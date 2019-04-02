@@ -101,14 +101,14 @@ class AboutDetailState extends State<AboutDetailPage> {
                 height: 20,
               ),
               Text(
-                'Competetition Sponsors',
+                'Competition Sponsors',
                 style: Theme.of(context).textTheme.title,
               ),
               GridView.count(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   crossAxisCount: 3,
-                  childAspectRatio: 1.5,
+                  childAspectRatio: 1,
                   children: silverSponsors.map(
                     (String url) {
                       return sponsorWidget(url);
@@ -131,7 +131,7 @@ class AboutDetailState extends State<AboutDetailPage> {
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   crossAxisCount: 3,
-                  childAspectRatio: 2.0,
+                  childAspectRatio: 1.2,
                   children: bronzeSponsors.map(
                     (String url) {
                       return sponsorWidget(url);
@@ -182,7 +182,7 @@ class AboutDetailState extends State<AboutDetailPage> {
       child: new Card(
         elevation: 1,
         child: Padding(
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.all(2),
           child: Image.network(url),
         ),
       ),
