@@ -6,6 +6,7 @@ import 'package:flutter_pk/schedule/model.dart';
 import 'package:flutter_pk/schedule/session_detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_pk/theme.dart';
+import 'package:flutter_pk/util.dart';
 import 'package:flutter_pk/widgets/custom_app_bar.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -19,7 +20,9 @@ class SchedulePageState extends State<SchedulePage>
     with SingleTickerProviderStateMixin {
   final Color kUnConfirmedColor = Colors.grey[100];
   final Color kConfirmedColor = Colors.green[100];
+  final Color kRejectedColor = Colors.orange[100];
   final Color kConfirmNotificationTextColor = Colors.black54;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,101 +45,110 @@ class SchedulePageState extends State<SchedulePage>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          _streamBuilderForUser(),
-          Expanded(
-            child: _streamBuilder(FireStoreKeys.sessionCollection),
-          ),
+          _buildRegistrationConfirmationBanner(),
+          _buildSessionList(),
         ],
       ),
-//      child:
     );
   }
 
-  Widget _registrationConfirmationBanner(DocumentSnapshot snapshot) {
-    User user = User.fromSnapshot(snapshot);
-
-    if (user == null || !user.isRegistered) {
-      return Container();
-    }
-
-    String message = (user.isRegistrationConfirmed)
-        ? "Your registration is confirmed."
-        : "Your registration is pending.";
-    Color bgColor =
-        (user.isRegistrationConfirmed) ? kConfirmedColor : kUnConfirmedColor;
-    return Container(
-      decoration: BoxDecoration(
-        color: bgColor,
-      ),
-      height: 30.0,
-      alignment: Alignment.center,
-      child: Text(
-        message,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: kConfirmNotificationTextColor,
-        ),
-      ),
-    );
-  }
-
-  StreamBuilder<QuerySnapshot> _streamBuilderForUser() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance
-          .collection(FireStoreKeys.userCollection)
-          .where("id", isEqualTo: userCache.user.id)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return Container();
-        return _registrationConfirmationBanner(snapshot.data.documents?.first);
-      },
-    );
-  }
-
-  StreamBuilder<QuerySnapshot> _streamBuilder(String parameter) {
+  Widget _buildRegistrationConfirmationBanner() {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
           .collection(FireStoreKeys.dateCollection)
           .snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData)
-          return Center(
-            child: Text(
-              'Nothing found!',
-              style: Theme.of(context).textTheme.title.copyWith(
-                    color: Colors.black26,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          );
-        return _getCollection(
-            context, snapshot.data.documents?.first, parameter);
+        if (!snapshot.hasData) return Container();
+
+        DateTime registrationConfirmationDate =
+            toDateTime(snapshot.data.documents.first.data['registrationConfirmationDate']);
+
+        return StreamBuilder<QuerySnapshot>(
+          stream: Firestore.instance
+              .collection(FireStoreKeys.userCollection)
+              .where("id", isEqualTo: userCache.user.id)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return Container();
+
+            User user = User.fromSnapshot(snapshot.data.documents.first);
+
+            if (user == null || !user.isRegistered) {
+              return Container();
+            }
+
+            var registrationDateExpired =
+                registrationConfirmationDate.compareTo(DateTime.now()) < 0;
+            String message = (user.isRegistrationConfirmed)
+                ? "Congratulations! You're shortlisted for this event."
+                : registrationDateExpired
+                    ? "We're sorry! You're not shortlisted for this event."
+                    : "We will inform you about your registration status shortly.";
+            Color bgColor = (user.isRegistrationConfirmed)
+                ? kConfirmedColor
+                : registrationDateExpired ? kRejectedColor : kUnConfirmedColor;
+
+            return Container(
+              decoration: BoxDecoration(
+                color: bgColor,
+              ),
+              height: 30.0,
+              alignment: Alignment.center,
+              child: Text(
+                message,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: kConfirmNotificationTextColor,
+                ),
+              ),
+            );
+          },
+        );
       },
     );
   }
 
-  Widget _getCollection(
-      BuildContext context, DocumentSnapshot snapshot, String parameter) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: snapshot.reference
-            .collection(parameter)
-            .orderBy('startDateTime')
+  Widget _buildSessionList() {
+    return Expanded(
+      child: StreamBuilder<QuerySnapshot>(
+        stream: Firestore.instance
+            .collection(FireStoreKeys.dateCollection)
             .snapshots(),
         builder: (context, snapshot) {
-          return _buildList(context, snapshot.data?.documents);
-        });
-  }
+          if (!snapshot.hasData || snapshot.data.documents?.first == null)
+            return Center(
+              child: Text(
+                'Nothing found!',
+                style: Theme.of(context).textTheme.title.copyWith(
+                      color: Colors.black26,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+            );
 
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    if (snapshot == null) return Container();
-    if (snapshot.length < 1) return Container();
-    return ListView(
-      padding: const EdgeInsets.only(top: 20.0),
-      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
+          return StreamBuilder<QuerySnapshot>(
+            stream: snapshot.data.documents.first.reference
+                .collection(FireStoreKeys.sessionCollection)
+                .orderBy('startDateTime')
+                .snapshots(),
+            builder: (context, snapshot) {
+              var items = snapshot.data?.documents;
+              if (items == null) return Container();
+              if (items.length < 1) return Container();
+              return ListView(
+                padding: const EdgeInsets.only(top: 20.0),
+                children: items
+                    .map((data) => _buildSessionItem(context, data))
+                    .toList(),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+  Widget _buildSessionItem(BuildContext context, DocumentSnapshot data) {
     final session = Session.fromSnapshot(data);
     var hour = session.startDateTime?.hour;
     var minute = session.startDateTime?.minute;
