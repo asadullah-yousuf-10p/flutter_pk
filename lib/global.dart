@@ -17,6 +17,7 @@ abstract class GlobalConstants {
   static const int emailMaxLength = 50;
   static const String breakId = 'break';
   static const int entryMaxLength = 50;
+  static const int techStachMaxLength = 140;
   static const String qrKey =
       "thisisahighlyencryptedaubykhanstringthatisbeingusedforfluttermeetupqrscan";
   static const String addNumberDisplayText =
