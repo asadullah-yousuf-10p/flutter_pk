@@ -60,8 +60,8 @@ class SchedulePageState extends State<SchedulePage>
       builder: (context, snapshot) {
         if (!snapshot.hasData) return Container();
 
-        DateTime registrationConfirmationDate =
-            toDateTime(snapshot.data.documents.first.data['registrationConfirmationDate']);
+        DateTime registrationConfirmationDate = toDateTime(
+            snapshot.data.documents.first.data['registrationConfirmationDate']);
 
         return StreamBuilder<QuerySnapshot>(
           stream: Firestore.instance
@@ -92,7 +92,7 @@ class SchedulePageState extends State<SchedulePage>
               decoration: BoxDecoration(
                 color: bgColor,
               ),
-              height: 30.0,
+              padding: EdgeInsets.all(5),
               alignment: Alignment.center,
               child: Text(
                 message,
