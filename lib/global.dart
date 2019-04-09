@@ -37,7 +37,7 @@ abstract class GlobalConstants {
   static const String prizeDetails =
       'Win Cash prizes up to Rs. 25,000!\nGrab swag kits, cool giveaways and certificates\nNetwork and share ideas with likeminded women\nOpportunity to meet mentors and professionals from industry';
   static const String guidelinesDetails =
-      '• Once registered, shortlisted individuals will be sent a confirmation email\n• Participants are expected to bring their laptops and chargers for the competition\n • Pre-install Languages for Coding Competition: C#, C++, Java8, Javascript (Node.js), Objective-C, PHP, Ruby, Python 3, Golang\n • Pre-install Languages & Tools for Testing Competition: Java, C#, C++\n • Pres-install Tools for Design Competition:  Adobe Photoshop CS6 +, Adobe Illustrator CS6+, Axure RP 7+';
+      '1) Once registered, shortlisted individuals will be sent a confirmation email. You can also check your registration status in the app.\n \n2) Machines will be provided to the participants. However, they can bring their own laptops and chargers for the competition as well\n \n3) Participants carrying their personal laptop to the event shall have the following pre-installed tools and languages:\n     • Coding Competition (install any one as per proficiency level): C#, C++, Java8, Javascript (Node.js), Objective-C, PHP, Ruby, Python 3, Golang\n     • Testing Competition: Browsers, MS Office (Word/Excel/Visio), Screenshot capturing tool (paint/snaggit/any online tool)\n     • Design Competition: Adobe Photoshop CS6 +, Adobe Illustrator CS6+, Axure RP 7+';
 }
 
 abstract class SharedPreferencesKeys {

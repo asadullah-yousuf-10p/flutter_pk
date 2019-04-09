@@ -52,9 +52,11 @@ class RegistrationPageState extends State<RegistrationPage> {
   int _studentProgramNamesRadioValue = 0;
   int _studentProgramYearsRadioValue = 0;
   int _professionalYearsOfExpRadioValue = 0;
+  int _laptopOtionsRadioValue = 0;
 
   var competitionNames = ['Coding', 'Design', 'Testing'];
   var occupationNames = ['Professional', 'Student'];
+  var laptopOptions = ['No', 'Yes'];
 
   var studentProgramNames = ['Bachelors', 'Masters'];
   var studentProgramYears = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
@@ -367,6 +369,45 @@ class RegistrationPageState extends State<RegistrationPage> {
               ],
             ),
             Divider(),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 26.0,
+                bottom: 16.0,
+                left: 32.0,
+                right: 32.0,
+              ),
+              child: new Text(
+                'Will you bring your own laptop?',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.title,
+              ),
+            ),
+            new Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new RadioListTile(
+                  value: 0,
+                  groupValue: _laptopOtionsRadioValue,
+                  onChanged: (int) => laptop(int),
+                  title: new Text(
+                    laptopOptions[0],
+                    style: new TextStyle(fontSize: 16.0),
+                  ),
+                ),
+                new RadioListTile(
+                  value: 1,
+                  groupValue: _laptopOtionsRadioValue,
+                  onChanged: (int) => laptop(int),
+                  title: new Text(
+                    laptopOptions[1],
+                    style: new TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Divider(),
             SizedBox(
               height: 20,
             ),
@@ -536,45 +577,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                 ),
               ],
             ),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 26.0,
-                bottom: 16.0,
-                left: 32.0,
-                right: 32.0,
-              ),
-              child: Text(
-                'On what technology stacks you have worked on?',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.title,
-              ),
-            ),
-            Form(
-              key: _techStackFormKey,
-              child: ListTile(
-                title: TextFormField(
-                  focusNode: _techStackFocusNode,
-                  textInputAction: TextInputAction.next,
-                  onFieldSubmitted: (term){
-                    _techStackFocusNode.unfocus();
-                    FocusScope.of(context).requestFocus(_orgNameFocusNode);
-                  },
-                  controller: _techStackController,
-                  maxLength: GlobalConstants.techStachMaxLength,
-                  validator: (value) => _validateField(value),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
-                    hintText: 'Android, iOS, JavaScript, .Net etc.',
-                    labelText: 'Technology Stack',
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
+            _competitionRadioValue == 0 ? getTechStackView() : Container(),
             Divider(),
             Padding(
               padding: const EdgeInsets.only(
@@ -595,7 +598,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                 title: TextFormField(
                   focusNode: _orgNameFocusNode,
                   textInputAction: TextInputAction.next,
-                  onFieldSubmitted: (term){
+                  onFieldSubmitted: (term) {
                     _orgNameFocusNode.unfocus();
                     FocusScope.of(context).requestFocus(_designationFocusNode);
                   },
@@ -634,7 +637,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                 title: TextFormField(
                   focusNode: _designationFocusNode,
                   textInputAction: TextInputAction.done,
-                  onFieldSubmitted: (term){
+                  onFieldSubmitted: (term) {
                     _designationFocusNode.unfocus();
                   },
                   controller: _designationController,
@@ -692,9 +695,12 @@ class RegistrationPageState extends State<RegistrationPage> {
                       _techStackFocusNode.unfocus();
                       _orgNameFocusNode.unfocus();
                       _designationFocusNode.unfocus();
-                      if (_techStackFormKey.currentState.validate() &&
-                          _orgNameFormKey.currentState.validate() &&
-                          _designationFormKey.currentState.validate()) {
+                      if (_competitionRadioValue == 0
+                          ? _techStackFormKey.currentState.validate() &&
+                              _orgNameFormKey.currentState.validate() &&
+                              _designationFormKey.currentState.validate()
+                          : _orgNameFormKey.currentState.validate() &&
+                              _designationFormKey.currentState.validate()) {
                         await _submitDataToFirestore();
                         Alert(
                           context: context,
@@ -887,6 +893,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                 ),
               ],
             ),
+            _competitionRadioValue == 0 ? getTechStackView() : Container(),
             Divider(),
             SizedBox(
               height: 20,
@@ -928,7 +935,10 @@ class RegistrationPageState extends State<RegistrationPage> {
                     textColor: Theme.of(context).primaryColor,
                     onPressed: () async {
                       _uniNameFocusNode.unfocus();
-                      if (_uniNameFormKey.currentState.validate()) {
+                      if (_competitionRadioValue == 0
+                          ? _techStackFormKey.currentState.validate() &&
+                              _uniNameFormKey.currentState.validate()
+                          : _uniNameFormKey.currentState.validate()) {
                         await _submitDataToFirestore();
                         Alert(
                           context: context,
@@ -954,9 +964,8 @@ class RegistrationPageState extends State<RegistrationPage> {
                             )
                           ],
                         ).show();
-                      } else {
+                      } else if (!_uniNameFormKey.currentState.validate()) {
                         _scrollController.animateTo(
-
                           _scrollController.position.minScrollExtent,
                           duration: const Duration(milliseconds: 500),
                           curve: Curves.ease,
@@ -1000,6 +1009,7 @@ class RegistrationPageState extends State<RegistrationPage> {
           'registration': Registration(
                   occupation: occupationNames[_occupationRadioValue],
                   competition: competitionNames[_competitionRadioValue],
+                  laptop: laptopOptions[_laptopOtionsRadioValue],
                   reasonToAttend: _reasonToAttendController.text)
               .toJson(),
           'mobileNumber': _mobileNumberController.text,
@@ -1010,7 +1020,10 @@ class RegistrationPageState extends State<RegistrationPage> {
                           studentProgramYears[_studentProgramYearsRadioValue],
                       program:
                           studentProgramNames[_studentProgramNamesRadioValue],
-                      uniName: _uniNameController.text)
+                      uniName: _uniNameController.text,
+                      techStack: _competitionRadioValue == 0
+                          ? _techStackController.text
+                          : '')
                   .toJson()
               : null,
           'professionalDetails': _occupationRadioValue == 0
@@ -1019,7 +1032,9 @@ class RegistrationPageState extends State<RegistrationPage> {
                           _professionalYearsOfExpRadioValue],
                       designation: _designationController.text,
                       organizationName: _orgNameController.text,
-                      techStack: _techStackController.text)
+                      techStack: _competitionRadioValue == 0
+                          ? _techStackController.text
+                          : '')
                   .toJson()
               : null,
         });
@@ -1064,6 +1079,12 @@ class RegistrationPageState extends State<RegistrationPage> {
     });
   }
 
+  laptop(int) {
+    setState(() {
+      _laptopOtionsRadioValue = int;
+    });
+  }
+
   studentProgram(int) {
     setState(() {
       _studentProgramNamesRadioValue = int;
@@ -1081,26 +1102,79 @@ class RegistrationPageState extends State<RegistrationPage> {
       _professionalYearsOfExpRadioValue = int;
     });
   }
+
+  getTechStackView() {
+    return Column(
+      children: <Widget>[
+        Divider(),
+        Padding(
+          padding: const EdgeInsets.only(
+            top: 26.0,
+            bottom: 16.0,
+            left: 32.0,
+            right: 32.0,
+          ),
+          child: Text(
+            'On what technology stacks you have worked on?',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.title,
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Form(
+          key: _techStackFormKey,
+          child: ListTile(
+            title: TextFormField(
+              focusNode: _techStackFocusNode,
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (term) {
+                _techStackFocusNode.unfocus();
+                FocusScope.of(context).requestFocus(_orgNameFocusNode);
+              },
+              controller: _techStackController,
+              maxLength: GlobalConstants.techStachMaxLength,
+              validator: (value) => _validateField(value),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+                hintText: 'Java, Objective-C, JavaScript, .Net etc.',
+                labelText: 'Technology Stack',
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
 }
 
 class Registration {
   final String competition;
   final String occupation;
   final String reasonToAttend;
+  final String laptop;
   final DocumentReference reference;
 
   Registration(
-      {this.competition, this.occupation, this.reasonToAttend, this.reference});
+      {this.competition,
+      this.occupation,
+      this.reasonToAttend,
+      this.laptop,
+      this.reference});
 
   Registration.fromMap(Map<String, dynamic> map, {this.reference})
       : occupation = map['occupation'],
         competition = map['competition'],
-        reasonToAttend = map['reasonToAttend'];
+        reasonToAttend = map['reasonToAttend'],
+        laptop = map['laptop'];
 
   Map<String, dynamic> toJson() => {
         "occupation": this.occupation,
         "competition": this.competition,
         "reasonToAttend": this.reasonToAttend,
+        "laptop": this.laptop,
       };
 
   Registration.fromSnapshot(DocumentSnapshot snapshot)
@@ -1111,20 +1185,27 @@ class StudentDetails {
   final String uniName;
   final String program;
   final String currentYear;
+  final String techStack;
   final DocumentReference reference;
 
   StudentDetails(
-      {this.uniName, this.program, this.currentYear, this.reference});
+      {this.uniName,
+      this.program,
+      this.currentYear,
+      this.techStack,
+      this.reference});
 
   StudentDetails.fromMap(Map<String, dynamic> map, {this.reference})
       : program = map['program'],
         uniName = map['uniName'],
-        currentYear = map['currentYear'];
+        currentYear = map['currentYear'],
+        techStack = map['techStack'];
 
   Map<String, dynamic> toJson() => {
         "program": this.program,
         "uniName": this.uniName,
         "currentYear": this.currentYear,
+        "techStack": this.techStack,
       };
 
   StudentDetails.fromSnapshot(DocumentSnapshot snapshot)
