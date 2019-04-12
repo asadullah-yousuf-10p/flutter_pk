@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,8 +17,32 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprung/sprung.dart';
+import 'package:flutter_crashlytics/flutter_crashlytics.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  bool isInReleaseMode = const bool.fromEnvironment("dart.vm.product");;
+
+  FlutterError.onError = (FlutterErrorDetails details) {
+    if (isInReleaseMode) {
+      // In production mode report to the application zone to report to
+      // Crashlytics.
+      Zone.current.handleUncaughtError(details.exception, details.stack);
+    } else {
+      // In development mode simply print to console.
+      FlutterError.dumpErrorToConsole(details);
+    }
+  };
+
+  await FlutterCrashlytics().initialize();
+
+  runZoned<Future<Null>>(() async {
+    runApp(MyApp());
+  }, onError: (error, stackTrace) async {
+    // Whenever an error occurs, call the `reportCrash` function. This will send
+    // Dart errors to our dev console or Crashlytics depending on the environment.
+    await FlutterCrashlytics().reportCrash(error, stackTrace, forceCrash: true);
+  });
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -54,7 +80,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-
     Firestore.instance.settings(
       timestampsInSnapshotsEnabled: true,
     );
