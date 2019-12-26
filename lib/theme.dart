@@ -17,8 +17,8 @@ abstract class ColorDictionary {
   };
 }
 
-const Color kBlue = Color(0xFF54A8DB);
-const Color kPink = Color(0xFFD72E89);
+const double kCardBorderRadius = 8;
+const Color kBlue = Colors.blue;
 final theme = _buildTheme();
 
 ThemeData _buildTheme() {
@@ -27,24 +27,31 @@ ThemeData _buildTheme() {
 
   return base.copyWith(
     primaryColor: kBlue,
-    accentColor: kPink,
+    accentColor: kBlue,
     canvasColor: Colors.white,
     scaffoldBackgroundColor: Colors.white,
-    appBarTheme: AppBarTheme(
+    appBarTheme: base.appBarTheme.copyWith(
       brightness: Brightness.light,
       iconTheme: base.iconTheme.copyWith(color: Colors.black),
       color: Colors.white,
-      textTheme: base.primaryTextTheme
-          .copyWith(
-              title: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 20,
-          ))
-          .apply(bodyColor: Colors.black),
+      textTheme: base.primaryTextTheme.copyWith(
+        title: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 20,
+        ).apply(
+          color: Colors.black,
+        ),
+      ),
+    ),
+    cardTheme: base.cardTheme.copyWith(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(kCardBorderRadius)),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
     ),
     buttonTheme: base.buttonTheme.copyWith(
-      buttonColor: kPink,
-      colorScheme: ColorScheme.dark(),
+      buttonColor: kBlue,
       textTheme: ButtonTextTheme.primary,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     ),

@@ -21,7 +21,6 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
   bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       backgroundColor: ColorDictionary.stringToColor[widget.session.color],
       body: Stack(
@@ -170,7 +169,7 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
         desc: "Your feedback has been recorded",
         buttons: [
           DialogButton(
-            child: Text("Cool!",
+            child: Text("COOL!",
                 style: Theme.of(context).textTheme.title.copyWith(
                       color: Colors.white,
                     )),
@@ -178,7 +177,7 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).popUntil(
-                ModalRoute.withName(Routes.home_master),
+                ModalRoute.withName(Routes.home),
               );
             },
           )
@@ -193,7 +192,7 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
         desc: "An error has occurred",
         buttons: [
           DialogButton(
-            child: Text("Dismiss",
+            child: Text("DISMISS",
                 style: Theme.of(context).textTheme.title.copyWith(
                       color: Colors.white,
                     )),

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pk/feedback/feedback.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/schedule/model.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_pk/theme.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -29,7 +29,7 @@ class SessionDetailPage extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: _buildFeedbackButton(context),
-      body: _buildBody(showSpeakerInfo: session.speakers.length > 0),
+      body: _buildBody(showSpeakerInfo: session.speakers != null && session.speakers.length > 0),
     );
   }
 
@@ -51,7 +51,7 @@ class SessionDetailPage extends StatelessWidget {
                 "You will be able to provide feedback once the event day ends!",
             buttons: [
               DialogButton(
-                child: Text("Cool!",
+                child: Text("COOL!",
                     style: Theme.of(context).textTheme.title.copyWith(
                           color: Colors.white,
                         )),
@@ -237,7 +237,7 @@ class SessionDetailPage extends StatelessWidget {
                   decoration: new BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: CachedNetworkImageProvider(
+                      image: NetworkImage(
                         speaker.photoUrl,
                       ),
                     ),

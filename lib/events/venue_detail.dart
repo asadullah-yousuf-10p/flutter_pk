@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pk/events/model.dart';
 import 'package:flutter_pk/global.dart';
-import 'package:flutter_pk/venue/model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:progress_indicators/progress_indicators.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class VenueDetailPage extends StatefulWidget {
   @override
@@ -20,6 +19,7 @@ class VenueDetailPageState extends State<VenueDetailPage> {
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+    _addMarker(_venue);
   }
 
   @override
@@ -31,18 +31,6 @@ class VenueDetailPageState extends State<VenueDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-          child: FloatingActionButton.extended(
-            onPressed: () => _navigateToGoogleMaps(),
-            icon: Icon(Icons.my_location),
-            label: Text('Navigate'),
-          )),
-      appBar: new AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
       body: Column(
         children: <Widget>[_buildBody()],
       ),
@@ -78,15 +66,6 @@ class VenueDetailPageState extends State<VenueDetailPage> {
                         _venue.location.longitude,
                       ),
                       zoom: 15.0),
-                  markers: <Marker>{
-                    Marker(
-                        markerId: MarkerId(_venue.title),
-                        position: LatLng(_venue.location.latitude,
-                            _venue.location.longitude),
-                        infoWindow: InfoWindow(title: _venue.title),
-                        icon: BitmapDescriptor.defaultMarkerWithHue(
-                            BitmapDescriptor.hueAzure))
-                  },
                 ),
                 SafeArea(
                   child: Padding(
@@ -135,7 +114,7 @@ class VenueDetailPageState extends State<VenueDetailPage> {
     });
     EventDetails _eventDetails = new EventDetails();
     var eventDetails = Firestore.instance
-        .collection(FireStoreKeys.dateCollection)
+        .collection(FireStoreKeys.eventCollection)
         .snapshots()
         .first;
     eventDetails.then((onValue) {
@@ -144,7 +123,7 @@ class VenueDetailPageState extends State<VenueDetailPage> {
         onValue.documents.first['venue']['location']['latitude'].toString(),
       );
       _eventDetails = EventDetails(
-          reference: onValue.documents.first.reference,
+          id: onValue.documents.first.documentID,
           venue: Venue(
               address: onValue.documents.first['venue']['address'],
               title: onValue.documents.first['venue']['title'],
@@ -163,33 +142,15 @@ class VenueDetailPageState extends State<VenueDetailPage> {
     });
   }
 
-  void _navigateToGoogleMaps() async {
-    bool isIOS = Theme.of(context).platform == TargetPlatform.iOS;
-    String googleUrl = '';
-    if (isIOS) {
-      googleUrl =
-          'comgooglemapsurl://maps.google.com/maps?f=d&daddr=${locationCache.latitude},${locationCache.longitude}&sspn=0.2,0.1';
-      String appleMapsUrl =
-          'https://maps.apple.com/?sll=${locationCache.latitude},${locationCache.longitude}';
-      if (await canLaunch("comgooglemaps://")) {
-        print('launching com googleUrl');
-        await launch(googleUrl);
-      } else if (await canLaunch(appleMapsUrl)) {
-        print('launching apple url');
-        await launch(appleMapsUrl);
-      } else {
-        await launch(
-            'https://www.google.com/maps/search/?api=1&query=${locationCache.latitude},${locationCache.longitude}');
-      }
-    } else {
-      googleUrl =
-          'google.navigation:q=${locationCache.latitude},${locationCache.longitude}&mode=d';
-      if (await canLaunch(googleUrl)) {
-        await launch(googleUrl);
-      } else {
-        await launch(
-            'https://www.google.com/maps/search/?api=1&query=${locationCache.latitude},${locationCache.longitude}');
-      }
-    }
+  void _addMarker(Venue venue) {
+    mapController.addMarker(
+      MarkerOptions(
+        position: LatLng(venue.location.latitude, venue.location.longitude),
+        infoWindowText: InfoWindowText(venue.title, venue.city),
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueAzure,
+        ),
+      ),
+    );
   }
 }

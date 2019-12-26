@@ -1,5 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/util.dart';
+
+class ScheduleBloc {
+  Stream<List<Session>> getSessions(String eventId) => Firestore.instance
+      .collection('${FireStoreKeys.eventCollection}/$eventId/${FireStoreKeys.sessionCollection}')
+      .orderBy('startDateTime')
+      .snapshots()
+      .asyncMap<List<Session>>((snapshot) => snapshot.documents
+          .map((doc) => Session.fromSnapshot(doc))
+          .toList());
+}
 
 class Speaker {
   final String id;

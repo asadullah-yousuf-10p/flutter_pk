@@ -4,7 +4,6 @@ import 'package:progress_indicators/progress_indicators.dart';
 class FullScreenLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -17,7 +16,7 @@ class FullScreenLoader extends StatelessWidget {
             child: SizedBox(
           height: 40.0,
           width: 40.0,
-          child: Image(image: AssetImage('assets/wtq_splash.png')),
+          child: Image(image: AssetImage('assets/ic_gdg_app.png')),
         )),
       ),
     );

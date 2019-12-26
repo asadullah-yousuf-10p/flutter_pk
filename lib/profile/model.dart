@@ -1,21 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-class UserCache {
-  User _user;
-
-  User get user => _user;
-
-  Future<User> getCurrentUser(String id, {bool useCached = true}) async {
-    if (_user != null && useCached) {
-      return _user;
-    }
-    _user = User.fromSnapshot(
-        await Firestore.instance.collection('users').document(id).get());
-    return _user;
-  }
-
-  void clear() => _user = null;
-}
+import 'package:flutter_pk/global.dart';
+import 'package:flutter_pk/helpers/shared_preferences.dart';
+import 'package:flutter_pk/registration/registration.dart';
 
 class User {
   final String id;
@@ -26,8 +12,8 @@ class User {
   final bool isRegistered;
   final bool isContributor;
   final bool isPresent;
-  final bool isRegistrationConfirmed;
   final DocumentReference reference;
+  final Occupation occupation;
 
   Contribution contribution;
 
@@ -40,20 +26,22 @@ class User {
     this.isRegistered = false,
     this.isContributor = false,
     this.isPresent = false,
-    this.isRegistrationConfirmed = false,
     this.mobileNumber,
+    this.occupation,
   });
 
-  User.fromMap(Map<String, dynamic> map, {this.reference})
+  User.fromMap(Map map, {this.reference})
       : id = map['id'],
         name = map['name'],
         email = map['email'],
         photoUrl = map['photoUrl'],
-        isRegistered = map['isRegistered'],
-        isContributor = map['isContributor'],
-        isPresent = map['isPresent'],
-        isRegistrationConfirmed = map['isRegistrationConfirmed'],
-        mobileNumber = map['mobileNumber'] {
+        isRegistered = map['isRegistered'] ?? false,
+        isContributor = map['isContributor'] ?? false,
+        isPresent = map['isPresent'] ?? false,
+        mobileNumber = map['mobileNumber'],
+        occupation = map['registration'] == null
+            ? null
+            : Occupation.fromMap(map['registration']) {
     if (isContributor) contribution = Contribution.fromMap(map['contribution']);
   }
 
@@ -65,8 +53,8 @@ class User {
         "isRegistered": isRegistered,
         "mobileNumber": mobileNumber,
         "isPresent": isPresent,
-        "isRegistrationConfirmed": isRegistrationConfirmed,
-        "isContributor": isContributor
+        "isContributor": isContributor,
+        "registration": occupation.toJson(),
       };
 
   User.fromSnapshot(DocumentSnapshot snapshot)

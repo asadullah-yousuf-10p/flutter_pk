@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pk/caches/user.dart';
-import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/helpers/formatters.dart';
 import 'package:flutter_pk/schedule/model.dart';
 import 'package:flutter_pk/schedule/session_detail.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_pk/theme.dart';
-import 'package:flutter_pk/util.dart';
-import 'package:flutter_pk/widgets/custom_app_bar.dart';
+import 'package:flutter_pk/widgets/animated_progress_indicator.dart';
 
 class SchedulePage extends StatefulWidget {
+  final String eventId;
+
+  SchedulePage(this.eventId);
+
   @override
   SchedulePageState createState() {
     return new SchedulePageState();
@@ -18,138 +18,43 @@ class SchedulePage extends StatefulWidget {
 
 class SchedulePageState extends State<SchedulePage>
     with SingleTickerProviderStateMixin {
-  final Color kUnConfirmedColor = Colors.grey[100];
-  final Color kConfirmedColor = Colors.green[100];
-  final Color kRejectedColor = Colors.orange[100];
-  final Color kConfirmNotificationTextColor = Colors.black54;
+  ScheduleBloc bloc = ScheduleBloc();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            CustomAppBar(
-              title: 'Schedule',
-            ),
-            _buildBody()
-          ],
+    return Column(
+      children: <Widget>[
+        /// Have to add this hero tag to avoid a glitch which
+        /// prevents hero child to appear properly when navigated
+        /// back to event listing page
+        Hero(
+          tag: 'banner_${widget.eventId}',
+          child: Container(),
         ),
-      ),
-    );
-  }
-
-  Widget _buildBody() {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          _buildRegistrationConfirmationBanner(),
-          _buildSessionList(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRegistrationConfirmationBanner() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance
-          .collection(FireStoreKeys.dateCollection)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return Container();
-
-        DateTime registrationConfirmationDate = toDateTime(
-            snapshot.data.documents.first.data['registrationConfirmationDate']);
-
-        return StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance
-              .collection(FireStoreKeys.userCollection)
-              .where("id", isEqualTo: userCache.user.id)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return Container();
-
-            User user = User.fromSnapshot(snapshot.data.documents.first);
-
-            if (user == null || !user.isRegistered) {
-              return Container();
-            }
-
-            var registrationDateExpired =
-                registrationConfirmationDate.compareTo(DateTime.now()) < 0;
-            String message = (user.isRegistrationConfirmed)
-                ? "Congratulations! You're shortlisted for this event."
-                : registrationDateExpired
-                    ? "We're sorry! You're not shortlisted for this event."
-                    : "We will inform you about your registration status shortly.";
-            Color bgColor = (user.isRegistrationConfirmed)
-                ? kConfirmedColor
-                : registrationDateExpired ? kRejectedColor : kUnConfirmedColor;
-
-            return Container(
-              decoration: BoxDecoration(
-                color: bgColor,
-              ),
-              padding: EdgeInsets.all(5),
-              alignment: Alignment.center,
-              child: Text(
-                message,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: kConfirmNotificationTextColor,
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildSessionList() {
-    return Expanded(
-      child: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance
-            .collection(FireStoreKeys.dateCollection)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData || snapshot.data.documents?.first == null)
-            return Center(
-              child: Text(
-                'Nothing found!',
-                style: Theme.of(context).textTheme.title.copyWith(
-                      color: Colors.black26,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            );
-
-          return StreamBuilder<QuerySnapshot>(
-            stream: snapshot.data.documents.first.reference
-                .collection(FireStoreKeys.sessionCollection)
-                .orderBy('startDateTime')
-                .snapshots(),
+        Expanded(
+          child: StreamBuilder<List<Session>>(
+            stream: bloc.getSessions(widget.eventId),
             builder: (context, snapshot) {
-              var items = snapshot.data?.documents;
-              if (items == null) return Container();
-              if (items.length < 1) return Container();
-              return ListView(
+              if (!snapshot.hasData) {
+                return AnimatedProgressIndicator();
+              }
+
+              var sessions = snapshot.data;
+              return ListView.builder(
+                itemCount: sessions.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return _buildListItem(context, sessions[index]);
+                },
                 padding: const EdgeInsets.only(top: 20.0),
-                children: items
-                    .map((data) => _buildSessionItem(context, data))
-                    .toList(),
               );
             },
-          );
-        },
-      ),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildSessionItem(BuildContext context, DocumentSnapshot data) {
-    final session = Session.fromSnapshot(data);
+  Widget _buildListItem(BuildContext context, Session session) {
     var hour = session.startDateTime?.hour;
     var minute = session.startDateTime?.minute;
 
@@ -173,7 +78,7 @@ class SchedulePageState extends State<SchedulePage>
               child: Column(
                 children: <Widget>[
                   Text(
-                    '${hour < 10 ? '0' + hour.toString() : hour.toString()}:${minute < 10 ? '0' + minute.toString() : minute.toString()}',
+                    '${_formatTimeDigit(hour)}:${_formatTimeDigit(minute)}',
                     style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold),
@@ -197,35 +102,26 @@ class SchedulePageState extends State<SchedulePage>
                   ),
                 ),
                 child: ListTile(
-                  title: Text(
-                    session.title,
-                    style: TextStyle(
-                        color:
-                            ColorDictionary.stringToColor[session?.textColor]),
-                  ),
-                  subtitle: Text(
-                    '${formatDate(
-                      session?.startDateTime,
-                      DateFormats.shortUiDateTimeFormat,
-                    )} - ${formatDate(
-                      session?.endDateTime,
-                      DateFormats.shortUiTimeFormat,
-                    )}',
-                    style: TextStyle(
-                      color: ColorDictionary.stringToColor[session?.textColor],
+                    title: Text(
+                      session.title,
+                      style: TextStyle(
+                          color: ColorDictionary
+                              .stringToColor[session?.textColor]),
                     ),
-                  ),
-                  onTap: () async {
-                    if (session.id != GlobalConstants.breakId)
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SessionDetailPage(
-                                session: session,
-                              ),
-                        ),
-                      );
-                  },
-                ),
+                    subtitle: Text(
+                      '${formatDate(
+                        session?.startDateTime,
+                        DateFormats.shortUiDateTimeFormat,
+                      )} - ${formatDate(
+                        session?.endDateTime,
+                        DateFormats.shortUiTimeFormat,
+                      )}',
+                      style: TextStyle(
+                        color:
+                            ColorDictionary.stringToColor[session?.textColor],
+                      ),
+                    ),
+                    onTap: () => _handleListTileOnTap(context, session)),
               ),
             ),
           ],
@@ -235,5 +131,21 @@ class SchedulePageState extends State<SchedulePage>
         ),
       ],
     );
+  }
+
+  String _formatTimeDigit(int timeValue) =>
+      timeValue < 10 ? '0' + timeValue.toString() : timeValue.toString();
+
+  Future _handleListTileOnTap(BuildContext context, Session session) async {
+    var isDescriptionAvailable =
+        session.description != null && session.description.isNotEmpty;
+    if (isDescriptionAvailable)
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SessionDetailPage(
+            session: session,
+          ),
+        ),
+      );
   }
 }

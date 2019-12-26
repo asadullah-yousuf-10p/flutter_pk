@@ -7,12 +7,12 @@ class SprungBox extends StatefulWidget {
   final Damped damped;
   final Duration duration;
   final BoolCallback callback;
-  final String sponsorImageUrl;
+  final String assetImageName;
 
   SprungBox({
-    this.damped = Damped.over,
+    this.damped = Damped.critically,
+    @required this.assetImageName,
     this.callback,
-    this.sponsorImageUrl,
     duration,
   }) : this.duration = duration ?? Duration(milliseconds: 3500);
 
@@ -61,61 +61,17 @@ class _SprungBoxState extends State<SprungBox>
             margin: EdgeInsets.only(
               left: left,
             ),
-            height: 400.0,
+            height: 250.0,
             width: width,
             color: Colors.transparent,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        height: 30,
-                        child: Image(
-                          image: AssetImage('assets/10p_uni_logo.png'),
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Container(
-                        height: 16,
-                        width: 2,
-                        color: Theme.of(context).dividerColor,
-                      ),
-                      SizedBox(width: 8),
-                      Container(
-                        height: 30,
-                        child: Image(
-                          image: AssetImage('assets/flutterKarachi.png'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 180,
-                  child: Image(
-                    image: AssetImage('assets/wtq_splash.png'),
-                  ),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'Powered By:',
-                  style: Theme.of(context).textTheme.subtitle,
-                ),
-                SizedBox(height: 8),
-                Container(
-                  height: 60,
-                  child: widget.sponsorImageUrl != null
-                      ? Image.network(widget.sponsorImageUrl)
-                      : null,
-                ),
-              ],
+            child: SizedBox(
+              height: 250.0,
+              width: 250.0,
+              child: Image(
+                image: AssetImage(widget.assetImageName),
+              ),
             ),
           ),
-          /* ),*/
         );
       },
     );

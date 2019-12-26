@@ -14,10 +14,8 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="Women Tech Quest"
+        android:label="GDG Kolachi"
         android:icon="@mipmap/launcher_icon">
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCJwtWFULJNQnV508P3SLBxzFb1hjGwIus"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -37,9 +35,5 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="5400676925981e0ee9a7b3d7b4eb25f3fcc72922"
-            />
     </application>
 </manifest>

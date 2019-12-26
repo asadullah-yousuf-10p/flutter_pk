@@ -62,9 +62,7 @@ void showErrorDialog(String title, String message, BuildContext context) async {
                         child: CircleAvatar(
                           backgroundColor: Theme.of(context).primaryColorLight,
                           foregroundColor: Colors.white,
-                          child: Image(
-                            image: AssetImage('assets/flutterKarachi.png'),
-                          ),
+                          child: Image(image: AssetImage('assets/flutterKarachi.png'),),
                           radius: 30.0,
                         ),
                         onTap: () => Navigator.of(context).pop(),
