@@ -7,7 +7,7 @@ description: A new Flutter project.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 1.0.0+5
+version: 2.0.0+20022601
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -15,22 +15,39 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_swiper: ^1.1.4
+  flutter_swiper: ^1.1.6
   firebase_auth: ^0.15.3
   cloud_firestore: ^0.12.9+3
+  firebase_messaging: ^5.0.2
   sprung: ^1.1.0+11
   intl: '^0.15.4'
   rounded_modal: ^1.0.0
   progress_indicators: ^0.1.2
-  google_sign_in: ^4.1.1
-  # cached_network_image: 2.0.0-rc
+  google_sign_in: ^4.1.4
+  cached_network_image: 2.0.0-rc.1
   rflutter_alert: ^1.0.2
   shared_preferences: ^0.5.6
   smooth_star_rating: 1.0.1
   barcode_scan: ^1.0.0
-  google_maps_flutter: ^0.2.0+3
-  url_launcher: ^5.0.1
+  #google_maps_flutter: ^0.2.0+3
+  url_launcher: ^5.4.1
   qr_flutter: ^3.0.1
+  font_awesome_flutter: ^8.5.0
+  json_annotation: ^3.0.0
+  bloc: ^3.0.0
+  flutter_bloc: ^3.1.0
+  chopper: ^3.0.1+1
+  image_picker: ^0.6.3+1
+  google_fonts: ^0.3.7
+  # badges for message notification
+  badges: ^1.1.0
+  #Provide for state managment
+  provider: ^4.0.4
+  firebase_storage:
+    git:
+      url: git://github.com/danysz/flutterfire.git
+      ref: master
+      path: packages/firebase_storage
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -40,12 +57,17 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: "^0.7.0"
+  test: ^1.9.4
+  mockito: ^4.1.1
+  build_runner: ^1.0.0
+  json_serializable: ^3.2.0
+  chopper_generator: ^3.0.1+1
 
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path_android: "assets/icon/icon.png"
-  image_path_ios: "assets/icon/icon_ios.jpg"
+  image_path_android: "assets/icon/wtq_icon.png"
+  image_path_ios: "assets/icon/wtq_icon_ios.png"
 
 
 # For information on the generic Dart part of this file, see the
@@ -53,6 +75,20 @@ flutter_icons:
 
 # The following section is specific to Flutter.
 flutter:
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: fonts/Montserrat-SemiBold.ttf
+          weight: 600
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-Medium.ttf
+          weight: 500
+        - asset: fonts/Roboto-Regular.ttf
+          weight: 400
+        - asset: fonts/Roboto-Light.ttf
+          weight: 300
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -60,6 +96,11 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/icon/logo.png
+    - assets/icon/2.0x/logo.png
+    - assets/icon/3.0x/logo.png
+    - assets/icon/4.0x/logo.png
+    - assets/icon/5.0x/logo.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

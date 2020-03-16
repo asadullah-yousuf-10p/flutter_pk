@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_pk/global.dart';
+import 'package:flutter_pk/helpers/global.dart';
 import 'package:flutter_pk/helpers/shared_preferences.dart';
 import 'package:flutter_pk/profile/model.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -77,11 +77,13 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            if (_user != null) _buildBody(),
-          ],
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              if (_user != null) _buildBody(),
+            ],
+          ),
         ),
       ),
     );
@@ -128,7 +130,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
           Expanded(
             child: QrImage(
               data: _user.id,
-              size: 300,
+
             ),
           ),
           Padding(

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_pk/global.dart';
+import 'package:flutter_pk/helpers/global.dart';
 import 'package:flutter_pk/profile/model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -38,7 +38,7 @@ class LoginService {
 
   Future<GoogleSignInAuthentication> _handleGoogleSignIn() async {
     GoogleSignInAccount googleUser = await googleSignIn.signIn();
-    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    GoogleSignInAuthentication googleAuth = await googleUser?.authentication;    
     return googleAuth;
   }
 

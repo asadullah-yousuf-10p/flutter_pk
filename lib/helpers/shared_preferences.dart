@@ -1,4 +1,4 @@
-import 'package:flutter_pk/global.dart';
+import 'package:flutter_pk/helpers/global.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHandler {

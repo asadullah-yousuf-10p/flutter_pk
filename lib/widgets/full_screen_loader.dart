@@ -14,9 +14,28 @@ class FullScreenLoader extends StatelessWidget {
       child: Center(
         child: HeartbeatProgressIndicator(
             child: SizedBox(
-          height: 40.0,
-          width: 40.0,
-          child: Image(image: AssetImage('assets/ic_gdg_app.png')),
+          height: 70.0,
+          width: 70.0,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(60.0),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black,
+                )
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5.0,right: 2.0),
+              child: Image(
+                fit: BoxFit.cover,
+                image: AssetImage(
+                  'assets/ic_wtq_app.png',
+                ),
+              ),
+            ),
+          ),
         )),
       ),
     );

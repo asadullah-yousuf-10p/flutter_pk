@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_pk/global.dart';
-import 'package:flutter_pk/helpers/shared_preferences.dart';
-import 'package:flutter_pk/registration/registration.dart';
+import 'package:flutter_pk/screens/onboarding/registration.dart';
 
 class User {
   final String id;
