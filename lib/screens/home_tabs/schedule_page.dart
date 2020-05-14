@@ -21,7 +21,7 @@ class SchedulePageState extends State<SchedulePage>
 
   @override
   void initState() {
-    controller = TabController(length: 3, initialIndex: 0, vsync: this);
+    controller = TabController(length: 2, initialIndex: 0, vsync: this);
     super.initState();
   }
 
@@ -45,13 +45,10 @@ class SchedulePageState extends State<SchedulePage>
             unselectedLabelColor: Color(0xffb3ffffff),
             tabs: [
               Tab(
-                text: "Karachi",
+                text: "Day 1 - 13 June",
               ),
               Tab(
-                text: "Islamabad",
-              ),
-              Tab(
-                text: "Lahore",
+                text: "Day 2 - 14 June",
               ),
             ],
           ),
@@ -62,16 +59,12 @@ class SchedulePageState extends State<SchedulePage>
         children: [
           CitySchedule(
             widget.eventId,
-            city: 'Karachi',
+            city: 'day1',
           ),
           CitySchedule(
             widget.eventId,
-            city: 'Islamabad',
+            city: 'day2',
           ),
-          CitySchedule(
-            widget.eventId,
-            city: 'Lahore',
-          )
         ],
       ),
     );

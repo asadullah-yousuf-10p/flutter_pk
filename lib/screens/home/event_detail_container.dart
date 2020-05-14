@@ -68,7 +68,7 @@ class EventDetailContainerState extends State<EventDetailContainer>
     'WTQ Home',
     'Event Schedule',
     'Sponsors',
-    'Buy Ticket'
+    'Register Now'
   ];
 
   int _selectedIndex = 0;
@@ -305,7 +305,7 @@ class EventDetailContainerState extends State<EventDetailContainer>
                   BottomNavigationBarItem(
                     icon: Icon(Icons.local_offer),
                     title: Text(
-                      'Buy Ticket',
+                      'Register',
                       style: TextStyle(
                           fontFamily: 'Roboto',
                           fontSize: 11,

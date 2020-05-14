@@ -55,16 +55,17 @@ class WtqEvent extends StatelessWidget {
                       padding: EdgeInsets.only(left: 75),
                     ),
                     Text(
-                      model.date,
+                      model.date.replaceAll(RegExp(r'\\n'), '\n'),
                       style: Theme.of(context).textTheme.subhead.copyWith(
                             fontSize: 15,
                             color: kBlueDark,
+                            height: 0.8
                           ),
                     ),
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 10),
+                  padding: EdgeInsets.only(top: 20),
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,10 +82,11 @@ class WtqEvent extends StatelessWidget {
                     Container(
                       width: ScreenSize.blockSizeHorizontal * 55,
                       child: Text(
-                        model.timing,
+                        model.timing.replaceAll(RegExp(r'\\n'), '\n'),
                         style: Theme.of(context).textTheme.subhead.copyWith(
                               fontSize: 15,
                               color: kBlueDark,
+                              height: 0.8
                             ),
                       ),
                     ),

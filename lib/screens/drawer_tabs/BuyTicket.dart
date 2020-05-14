@@ -15,16 +15,6 @@ class BuyTicket extends StatelessWidget {
       body: ListView(
         padding: EdgeInsets.all(18),
         children: <Widget>[
-          Text(
-            'Buy tickets in your preferred city.',
-            style: Theme.of(context)
-                .textTheme
-                .subtitle
-                .copyWith(color: kBlueDark, fontSize: 18, letterSpacing: -0.17),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 20),
-          ),
           StreamBuilder<QuerySnapshot>(
             stream: Firestore.instance
                 .collection(
